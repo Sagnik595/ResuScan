@@ -3,6 +3,7 @@ import validator from 'validator';
 import bcrypt from 'bcrypt';
 import user from "../models/userModel.js";
 import jwt from 'jsonwebtoken';
+import Resume from "../models/resumeModel.js";
 
 //API for user register
 const registerUser = async(req,res)=>{
@@ -60,4 +61,28 @@ const loginUser = async(req,res)=>{
     }
 }
 
-export {registerUser, loginUser};
+
+//API to upload resume 
+const uploadResume = async (req, res) => {
+    try {
+        if (!req.file) {
+            return res.json({ success: false, message: "No file uploaded" });
+        }
+
+        const resume = await Resume.create({
+            filename: req.file.filename,
+            path: req.file.path
+        });
+
+        res.json({
+            success: true,
+            message: "File uploaded",
+            data: resume
+        });
+
+    } catch (err) {
+        res.json({ success: false, message: err.message });
+    }
+};
+
+export {registerUser, loginUser, uploadResume};
