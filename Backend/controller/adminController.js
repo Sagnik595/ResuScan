@@ -1,5 +1,6 @@
 import mongoose from "mongoose";
 import jwt from 'jsonwebtoken';
+import user from "../models/userModel.js";
 
 const adminLogin = async(req,res)=>{
 
@@ -19,4 +20,15 @@ const adminLogin = async(req,res)=>{
     }
 }
 
-export {adminLogin};
+
+const getAllUser = async(req,res)=>{
+    try {
+        const userData = await user.find().select("-password -_id -__v");
+        return res.json({success:true,data:userData});
+    } catch (error) {
+        console.log(error);
+        return res.json({success:false,message:error.message});
+    }
+}
+
+export {adminLogin, getAllUser};
