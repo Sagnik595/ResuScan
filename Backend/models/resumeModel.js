@@ -3,6 +3,7 @@ import mongoose from "mongoose";
 const resumeSchema = new mongoose.Schema({
     filename: String,
     path: String,
+    text: String,   
     uploadedAt: {
         type: Date,
         default: Date.now
