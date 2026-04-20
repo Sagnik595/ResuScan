@@ -61,4 +61,7 @@ const loginUser = async(req,res)=>{
 }
 
 
+//API to upload resume and extract text feature
+
+
 export {registerUser, loginUser};
