@@ -3,8 +3,6 @@ import validator from 'validator';
 import bcrypt from 'bcrypt';
 import user from "../models/userModel.js";
 import jwt from 'jsonwebtoken';
-import Resume from "../models/resumeModel.js";
-import { parsePDF } from "../utils/parser.js";
 
 //API for user register
 const registerUser = async(req,res)=>{
@@ -63,33 +61,4 @@ const loginUser = async(req,res)=>{
 }
 
 
-//API to upload resume 
-const uploadResume = async (req, res) => {
-    try {
-        if (!req.file) {
-            return res.json({ success: false, message: "No file uploaded" });
-        }
-
-        // STEP 1: Extract text
-        const extractedText = await parsePDF(req.file.path);
-
-        // STEP 2: Store in DB (important)
-        const resume = await Resume.create({
-            filename: req.file.filename,
-            path: req.file.path,
-            text: extractedText
-        });
-
-        res.json({
-            success: true,
-            message: "File uploaded & parsed",
-            textPreview: extractedText.substring(0, 300) 
-        });
-
-    } catch (err) {
-        res.json({ success: false, message: err.message });
-    }
-};
-
-
-export {registerUser, loginUser, uploadResume};
+export {registerUser, loginUser};
