@@ -3,6 +3,7 @@ import validator from 'validator';
 import bcrypt from 'bcrypt';
 import user from "../models/userModel.js";
 import jwt from 'jsonwebtoken';
+import extract from "pdf-extraction";
 
 //API for user register
 const registerUser = async(req,res)=>{
@@ -61,7 +62,7 @@ const loginUser = async(req,res)=>{
 }
 
 
-//API to upload resume and extract text feature
+//API to upload resume
 const handleupload = async (req, res) => {
     try {
         const userID = req.userID
@@ -82,4 +83,20 @@ const handleupload = async (req, res) => {
     }
 };
 
-export {registerUser, loginUser, handleupload};
+// API to parse the uploaded pdf
+const textparse = async(req,res)=>{
+    try {
+        const userID = req.userID
+        const userData = await user.findById(userID);
+        if(!userData)
+            return res.json({success:false,message:"User dont exist!!"});
+        const data = await extract(userData.pdf);
+        return res.json({success:true,message:"Text Extracted",text:data.text});
+    } catch (error) {
+        console.log(error.message);
+        return res.json({success:false,message:error.message})
+    }
+}
+
+
+export {registerUser, loginUser, handleupload, textparse};
