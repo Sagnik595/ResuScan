@@ -29,6 +29,12 @@ const userSchema = new mongoose.Schema({
     role:{
         type:String,
         default:"User"
+    },
+    pdf:{
+        type:Buffer,
+    },
+    token:{
+        type:String
     }
 })
 

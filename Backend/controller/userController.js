@@ -62,6 +62,24 @@ const loginUser = async(req,res)=>{
 
 
 //API to upload resume and extract text feature
+const handleupload = async (req, res) => {
+    try {
+        const userID = req.userID
 
+        const userData = await user.findById(userID);
+        if (!userData)
+            return res.json({ success: false, message: "User not found!!" });
 
-export {registerUser, loginUser};
+        const pdfBuffer = req.file.buffer;
+        userData.pdf = pdfBuffer;
+        await userData.save();
+
+        return res.json({ success: true, message: "Upload Successful" });
+
+    } catch (error) {
+        console.log(error);
+        return res.json({ success: false, message: "Upload Failed!!" });
+    }
+};
+
+export {registerUser, loginUser, handleupload};

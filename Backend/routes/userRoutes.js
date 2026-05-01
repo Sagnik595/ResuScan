@@ -1,10 +1,18 @@
 import express from 'express'
-import { loginUser, registerUser} from '../controller/userController.js';
+import { handleupload, loginUser, registerUser} from '../controller/userController.js';
+import multer from 'multer';
+import authUser from '../middleware/authUser.js';
+
+
+const upload = multer({
+  limits: { fileSize: 5 * 1024 * 1024 }// 5mb
+});
 
 const userRouter = express.Router();
 
 userRouter.post("/register",registerUser);
 userRouter.post("/login",loginUser);
+userRouter.post("/upload", authUser,upload.single('pdf'),handleupload);
 
 
 export default userRouter;
