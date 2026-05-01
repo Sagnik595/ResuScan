@@ -4,6 +4,9 @@ import bcrypt from 'bcrypt';
 import user from "../models/userModel.js";
 import jwt from 'jsonwebtoken';
 import extract from "pdf-extraction";
+import { SKILLS } from "../utils/skills.js";
+import { extractSkills } from "../utils/extractSkills.js";
+
 
 //API for user register
 const registerUser = async(req,res)=>{
@@ -91,12 +94,26 @@ const textparse = async(req,res)=>{
         if(!userData)
             return res.json({success:false,message:"User dont exist!!"});
         const data = await extract(userData.pdf);
-        return res.json({success:true,message:"Text Extracted",text:data.text});
+        let text = data.text;
+        text = text
+        .replace(/[^a-zA-Z0-9\s]/g, " ")   // remove symbols
+        .replace(/\s+/g, " ")              // normalize spaces
+        .toLowerCase()                    // normalize case
+        .trim();
+
+        text = text.split(" ")// these are all my tokens which is very important
+        
+        let sk = extractSkills(text);
+        
+
+        return res.json({success:true,message:"Text Extracted",skills:sk});
     } catch (error) {
         console.log(error.message);
         return res.json({success:false,message:error.message})
     }
 }
 
+
+// NEXT WORK TO DO IS TO MAKE A API FOR ENTERING JOB DESCRIPTION AND THEN FILTERING SKILLS REQUIRED
 
 export {registerUser, loginUser, handleupload, textparse};
