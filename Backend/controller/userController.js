@@ -115,5 +115,31 @@ const textparse = async(req,res)=>{
 
 
 // NEXT WORK TO DO IS TO MAKE A API FOR ENTERING JOB DESCRIPTION AND THEN FILTERING SKILLS REQUIRED
+const parseJD = async(req,res)=>{
+    try {
+        const {jd} = req.body;
+        let text = jd;
+        text = text
+        .replace(/[^a-zA-Z0-9\s]/g, " ")   // remove symbols
+        .replace(/\s+/g, " ")              // normalize spaces
+        .toLowerCase()                    // normalize case
+        .trim();
 
-export {registerUser, loginUser, handleupload, textparse};
+        text = text.split(" ");
+        
+        if (text.includes("mern")) {
+            text.push("mongodb", "express", "react", "node");
+        }
+        text = [...new Set(text)];
+
+        text = text.filter(item => item !== "MERN");
+
+        let jdData = extractSkills(text);
+        return res.json({success:true,required:jdData});
+    } catch (error) {
+        console.log(error);
+        return res.json({success:false,message:error.message});
+    }
+}
+
+export {registerUser, loginUser, handleupload, textparse, parseJD};
