@@ -30,15 +30,12 @@ const userSchema = new mongoose.Schema({
         type:String,
         default:"User"
     },
-    pdf:{
-        type:Buffer,
-    },
     token:{
         type:String
     }
 })
 
 
-const user = mongoose.model("user",userSchema);
+const user = mongoose.model("User",userSchema);
 
 export default user;

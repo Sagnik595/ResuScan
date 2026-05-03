@@ -1,0 +1,2 @@
+// analyzeResumeVsJD
+// getAnalysisResult

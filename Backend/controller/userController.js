@@ -65,55 +65,6 @@ const loginUser = async(req,res)=>{
 }
 
 
-//API to upload resume
-const handleupload = async (req, res) => {
-    try {
-        const userID = req.userID
-
-        const userData = await user.findById(userID);
-        if (!userData)
-            return res.json({ success: false, message: "User not found!!" });
-
-        const pdfBuffer = req.file.buffer;
-        userData.pdf = pdfBuffer;
-        await userData.save();
-
-        return res.json({ success: true, message: "Upload Successful" });
-
-    } catch (error) {
-        console.log(error);
-        return res.json({ success: false, message: "Upload Failed!!" });
-    }
-};
-
-// API to parse the uploaded pdf
-const textparse = async(req,res)=>{
-    try {
-        const userID = req.userID
-        const userData = await user.findById(userID);
-        if(!userData)
-            return res.json({success:false,message:"User dont exist!!"});
-        const data = await extract(userData.pdf);
-        let text = data.text;
-        text = text
-        .replace(/[^a-zA-Z0-9\s]/g, " ")   // remove symbols
-        .replace(/\s+/g, " ")              // normalize spaces
-        .toLowerCase()                    // normalize case
-        .trim();
-
-        text = text.split(" ")// these are all my tokens which is very important
-        
-        let sk = extractSkills(text);
-        
-
-        return res.json({success:true,message:"Text Extracted",skills:sk});
-    } catch (error) {
-        console.log(error.message);
-        return res.json({success:false,message:error.message})
-    }
-}
-
-
 // NEXT WORK TO DO IS TO MAKE A API FOR ENTERING JOB DESCRIPTION AND THEN FILTERING SKILLS REQUIRED
 const parseJD = async(req,res)=>{
     try {
@@ -142,4 +93,4 @@ const parseJD = async(req,res)=>{
     }
 }
 
-export {registerUser, loginUser, handleupload, textparse, parseJD};
+export {registerUser, loginUser, parseJD};

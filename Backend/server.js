@@ -15,6 +15,7 @@ connectDB();
 app.use(express.json());
 app.use(express.urlencoded({extended:true}));
 app.use(cors());
+app.use("/uploads", express.static("uploads"));
 app.use("/api/user",userRouter);
 app.use("/api/admin",adminRouter);
 
