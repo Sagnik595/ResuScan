@@ -1,8 +1,9 @@
 import express from 'express'
-import {loginUser, parseJD, registerUser} from '../controller/userController.js';
+import {loginUser, registerUser} from '../controller/userController.js';
 import multer from 'multer';
 import authUser from '../middleware/authUser.js';
 import { handleupload, textparse } from '../controller/resumeController.js';
+import { parseJD, uploadJD } from '../controller/jobController.js';
 
 const userRouter = express.Router();
 const storage = multer.diskStorage({
@@ -32,6 +33,7 @@ userRouter.post("/register",registerUser);
 userRouter.post("/login",loginUser);
 userRouter.post("/upload", authUser,upload.single('pdf'),handleupload);
 userRouter.post("/parse", textparse);
-userRouter.post("/jdupload",parseJD);
+userRouter.post("/jdupload",uploadJD);
+userRouter.post("/jdparse",parseJD);
 
 export default userRouter;
