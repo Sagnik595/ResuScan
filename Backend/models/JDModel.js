@@ -7,7 +7,8 @@ const JDSchema = new mongoose.Schema({
     },
     skills:{
         type:[String],
-        requried:true
+        requried:true,
+        default:[""]
     }
 });
 
