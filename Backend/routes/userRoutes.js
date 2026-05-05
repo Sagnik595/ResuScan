@@ -33,7 +33,5 @@ userRouter.post("/register",registerUser);
 userRouter.post("/login",loginUser);
 userRouter.post("/upload", authUser,upload.single('pdf'),handleupload);
 userRouter.post("/parse", textparse);
-userRouter.post("/jdupload",uploadJD);
-userRouter.post("/jdparse",parseJD);
 
 export default userRouter;

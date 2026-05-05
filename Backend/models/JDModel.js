@@ -1,13 +1,22 @@
 import mongoose from "mongoose";
 
 const JDSchema = new mongoose.Schema({
+    comName:{
+        type:String,
+        required:true,
+        default:""
+    },
+    jobTitle:{
+        type:String,
+        required:true
+    },
     desc:{
         type:String,
         required:true
     },
     skills:{
         type:[String],
-        requried:true,
+        required:true,
         default:[""]
     }
 });

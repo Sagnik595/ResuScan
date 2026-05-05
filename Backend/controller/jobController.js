@@ -8,7 +8,7 @@ import { extractSkills } from "../utils/extractSkills.js";
 // API to upload job description
 const uploadJD = async (req, res) => {
   try {
-    const { jdData } = req.body;
+    const { jdData,cName,jTitle} = req.body;
     if (!jdData)
       return res.json({
         success: false,
@@ -16,6 +16,8 @@ const uploadJD = async (req, res) => {
       });
 
     const data = await jd.create({
+      comName:cName,
+      jobTitle:jTitle,
       desc: jdData,
     });
     return res.json({ success: true, message: "JD uploaded", data: data._id });
