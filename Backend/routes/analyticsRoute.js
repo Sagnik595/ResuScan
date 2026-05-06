@@ -1,9 +1,8 @@
 import express from 'express'
-import { analyze1, analyze2 } from '../controller/analysisController.js';
+import { analyzeScore} from '../controller/analysisController.js';
 
 const AnalyzeRouter = express.Router();
 
-AnalyzeRouter.post('/analyze',analyze1);
-AnalyzeRouter.post('/analyzeMissing',analyze2);
+AnalyzeRouter.post('/analyze',analyzeScore);
 
 export default AnalyzeRouter;
