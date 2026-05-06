@@ -11,18 +11,24 @@ const analyzeSchema = new mongoose.Schema({
         ref: "jd",
         required: true,
     },
-    jodDesc:{
+    jobDesc:{
         type:String,
         required:true
     },
     score:{
-        type:String,
-        default:"0%"
+        type:Number,
+        default:0
     },
     missingSkills:{
         type:[String],
-        default:[""]
-    }
-});
+        default:[]
+    },
+    recommendations: {
+        skill_improvements: [String],
+        resume_improvements: [String],
+        project_suggestions: [String],
+        learning_roadmap: [String]
+        }
+}, {timestamps:true});
 
 export const analyze = mongoose.model("analyze",analyzeSchema);
