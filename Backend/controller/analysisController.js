@@ -4,6 +4,7 @@
 import { analyze } from "../models/analyzeModel.js";
 import { jd } from "../models/JDModel.js";
 import { Resume } from "../models/resumeModel.js";
+import user from "../models/userModel.js";
 import { getGroqChatCompletion } from "../services/grokService.js";
 
 
@@ -12,6 +13,12 @@ const analyzeScore = async (req, res) => {
     const { jid, rid } = req.body;
     const jdData = await jd.findById(jid);
     const resumeData = await Resume.findById(rid);
+    const userid = resumeData.userId;
+    const userData = await user.findById(userid);
+    if(userData.resumeLimit === 0)
+      return res.json({success:false,message:"Your resume limit is 0, please upgrade"});
+    userData.resumeLimit--;
+    await userData.save();
 
     if (!jdData || !resumeData) {
       return res.json({ success: false, message: "Invalid IDs" });
