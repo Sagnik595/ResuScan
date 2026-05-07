@@ -4,7 +4,8 @@
 import { analyze } from "../models/analyzeModel.js";
 import { jd } from "../models/JDModel.js";
 import { Resume } from "../models/resumeModel.js";
-import { getRecommendations } from "../services/geminiService.js";
+import { getGroqChatCompletion } from "../services/grokService.js";
+
 
 const analyzeScore = async (req, res) => {
   try {
@@ -29,7 +30,7 @@ const analyzeScore = async (req, res) => {
 
     let score = s2.length === 0 ? 0 : (common.length / s2.length) * 100; // matchScore = (matchedSkills / totalRequiredSkills) * 100
 
-    const recommendations = await getRecommendations({
+    const recommendations = await getGroqChatCompletion({
       resumeSkills: s1,
       requiredSkills: s2,
       missingSkills: missing,
