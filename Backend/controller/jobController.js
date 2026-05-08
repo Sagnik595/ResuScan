@@ -1,6 +1,12 @@
 // uploadJD
 // parseJD
 
+// to build
+// update JD
+// getAllJD
+// getSingleJD
+// deleteJD
+
 import mongoose from "mongoose";
 import { jd } from "../models/JDModel.js";
 import { extractSkills } from "../utils/extractSkills.js";
@@ -8,7 +14,7 @@ import { extractSkills } from "../utils/extractSkills.js";
 // API to upload job description
 const uploadJD = async (req, res) => {
   try {
-    const { jdData,cName,jTitle} = req.body;
+    const { jdData,cName,jTitle,location,salary,deadline} = req.body;
     if (!jdData)
       return res.json({
         success: false,
@@ -19,6 +25,9 @@ const uploadJD = async (req, res) => {
       comName:cName,
       jobTitle:jTitle,
       desc: jdData,
+      location,
+      salary,
+      deadline
     });
     return res.json({ success: true, message: "JD uploaded", data: data._id });
   } catch (error) {
@@ -38,6 +47,9 @@ const parseJD = async (req, res) => {
       });
     
     const JDdata = await jd.findById(id);
+    if(!JDdata)
+      return res.json({success:false,message:"No job found!!"});
+
     let text = JDdata.desc;
     text = text
       .replace(/[^a-zA-Z0-9\s]/g, " ") // remove symbols
@@ -52,7 +64,7 @@ const parseJD = async (req, res) => {
     }
     text = [...new Set(text)];
 
-    text = text.filter((item) => item !== "MERN");
+    text = text.filter((item) => item !== "mern");
 
     let jdData = extractSkills(text);
 

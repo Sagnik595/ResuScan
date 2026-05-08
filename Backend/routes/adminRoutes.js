@@ -8,6 +8,6 @@ const adminRouter = express.Router();
 adminRouter.post('/login',adminLogin);
 adminRouter.get('/getusers',authAdmin,getAllUser);
 adminRouter.post("/jdupload",authAdmin,uploadJD);
-adminRouter.post("/jdparse",parseJD);
+adminRouter.post("/jdparse",authAdmin,parseJD);
 
 export default adminRouter;

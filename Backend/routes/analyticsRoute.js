@@ -4,6 +4,6 @@ import { analyzeScore} from '../controller/analysisController.js';
 
 const AnalyzeRouter = express.Router();
 
-AnalyzeRouter.post('/analyze',authUser,analyzeScore);
+AnalyzeRouter.post('/analyze',analyzeScore);
 
 export default AnalyzeRouter;

@@ -32,6 +32,6 @@ const upload = multer({
 userRouter.post("/register",registerUser);
 userRouter.post("/login",loginUser);
 userRouter.post("/upload", authUser,upload.single('pdf'),handleupload);
-userRouter.post("/parse", textparse);
+userRouter.post("/parse",authUser,textparse);
 
 export default userRouter;
