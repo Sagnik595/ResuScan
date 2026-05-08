@@ -1,5 +1,7 @@
 import mongoose from "mongoose";
 
+// we can incorporate changes in this model just to make it look enhanced in the frontend...
+
 const JDSchema = new mongoose.Schema({
     comName:{
         type:String,
