@@ -78,10 +78,10 @@ const parseJD = async (req, res) => {
   }
 };
 
+//API to get all the job details
 const getAllJD = async(req,res)=>{
-
   try {
-    const jdData = await jd.find().select("-_id -companyLogo -desc -updatedAt -createdAt -__v");;
+    const jdData = await jd.find().select("-companyLogo -desc -updatedAt -createdAt -__v");;
     if(!jdData)
       return res.json({success:false,message:"No JD available!!"});
     const filterData = jdData;
@@ -93,4 +93,20 @@ const getAllJD = async(req,res)=>{
 }
 
 
-export {uploadJD, parseJD, getAllJD};
+//API to get single JOB details
+const getSingleJD = async(req,res)=>{
+  try {
+    const {id} = req.body;
+    if(!id)
+      return res.json({success:false,message:"No ID provided!!"});
+    const data = await jd.findById(id);
+    if(!data)
+      return res.json({success:false,message:"No such job found!!"});
+    return res.json({success:true,data});
+  } catch (error) {
+    console.log(error);
+    return res.json({ success: false, message: error.message });
+  }
+}
+
+export {uploadJD, parseJD, getAllJD, getSingleJD};
