@@ -1,7 +1,7 @@
 import express from 'express';
 import authAdmin from '../middleware/authAdmin.js';
 import { adminLogin, getAllUser } from '../controller/adminController.js';
-import { getAllJD, getSingleJD, parseJD, uploadJD } from '../controller/jobController.js';
+import { deleteJD, getAllJD, getSingleJD, parseJD, uploadJD } from '../controller/jobController.js';
 
 const adminRouter = express.Router();
 
@@ -11,5 +11,6 @@ adminRouter.post("/jdupload",authAdmin,uploadJD);
 adminRouter.post("/jdparse",authAdmin,parseJD);
 adminRouter.get("/allJD",authAdmin,getAllJD);
 adminRouter.post("/singleJD",authAdmin,getSingleJD);
+adminRouter.delete("/deleteJD",authAdmin,deleteJD);
 
 export default adminRouter;

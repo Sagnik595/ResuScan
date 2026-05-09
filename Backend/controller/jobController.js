@@ -1,10 +1,10 @@
 // uploadJD
 // parseJD
+// getAllJD
+// getSingleJD
 
 // to build
 // update JD
-// getAllJD
-// getSingleJD
 // deleteJD
 
 import mongoose from "mongoose";
@@ -109,4 +109,21 @@ const getSingleJD = async(req,res)=>{
   }
 }
 
-export {uploadJD, parseJD, getAllJD, getSingleJD};
+
+//API to delete JD
+const deleteJD = async(req,res)=>{
+  try {
+    const {id} = req.body;
+    if(!id)
+      return res.json({success:false,message:"No ID provided!!"});
+    const data = await jd.findByIdAndDelete(id);
+    if(!data)
+      return res.json({success:false,message:"No such job found!!"});
+    return res.json({success:true,message:"Job Detail Deleted successfully!!"});
+  } catch (error) {
+    console.log(error);
+    return res.json({ success: false, message: error.message });
+  }
+}
+
+export {uploadJD, parseJD, getAllJD, getSingleJD, deleteJD};
