@@ -78,5 +78,19 @@ const parseJD = async (req, res) => {
   }
 };
 
+const getAllJD = async(req,res)=>{
 
-export {uploadJD, parseJD};
+  try {
+    const jdData = await jd.find().select("-_id -companyLogo -desc -updatedAt -createdAt -__v");;
+    if(!jdData)
+      return res.json({success:false,message:"No JD available!!"});
+    const filterData = jdData;
+    return res.json({success:true,data:filterData});
+  } catch (error) {
+    console.log(error);
+    return res.json({ success: false, message: error.message });
+  }
+}
+
+
+export {uploadJD, parseJD, getAllJD};

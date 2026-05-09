@@ -81,7 +81,4 @@ const textparse = async (req, res) => {
   }
 };
 
-
-// Next API would be for the JOB description and JD parsing...
-
 export {handleupload,textparse};
