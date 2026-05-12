@@ -2,10 +2,12 @@
 // parseJD
 // getAllJD
 // getSingleJD
+// deleteJD
+
 
 // to build
 // update JD
-// deleteJD
+
 
 import mongoose from "mongoose";
 import { jd } from "../models/JDModel.js";
