@@ -13,4 +13,6 @@ adminRouter.get("/allJD",authAdmin,getAllJD);
 adminRouter.post("/singleJD",authAdmin,getSingleJD);
 adminRouter.delete("/deleteJD",authAdmin,deleteJD);
 
+// next 
+
 export default adminRouter;
