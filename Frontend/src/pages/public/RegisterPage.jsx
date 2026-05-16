@@ -26,13 +26,62 @@ const RegisterPage = () => {
     }));
   };
 
+  const validateForm = () => {
+    const { name, email, password } = formData;
+
+    // Name validation
+    if (!name.trim()) {
+      toast.error("Name is required");
+      return false;
+    }
+    if (name.trim().length < 3) {
+      toast.error("Name must be at least 3 characters");
+      return false;
+    }
+
+    // Email validation
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!email.trim()) {
+      toast.error("Email is required");
+      return false;
+    }
+    if (!emailRegex.test(email)) {
+      toast.error("Please enter a valid email");
+      return false;
+    }
+
+    // Password validation
+    const passwordRegex =
+      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+    if (!password.trim()) {
+      toast.error("Password is required");
+      return false;
+    }
+    if (!passwordRegex.test(password)) {
+      toast.error(
+        "Password must be at least 8 characters with uppercase, lowercase, number and special character (@$!%*?&)",
+      );
+      return false;
+    }
+
+    return true;
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    if (!validateForm()) {
+      return;
+    }
 
     try {
       setLoading(true);
 
-      const { data } = await api.post("/user/register", formData);
+      const { data } = await api.post("/user/register", {
+        name: formData.name.trim(),
+        email: formData.email.trim(),
+        password: formData.password,
+      });
 
       if (data.success) {
         toast.success(data.message);
@@ -41,9 +90,7 @@ const RegisterPage = () => {
         toast.error(data.message);
       }
     } catch (error) {
-      toast.error(
-        error.response?.data?.message || "Registration failed"
-      );
+      toast.error(error.response?.data?.message || "Registration failed");
     } finally {
       setLoading(false);
     }
@@ -91,22 +138,14 @@ const RegisterPage = () => {
                 required
               />
 
-              <Button
-                type="submit"
-                fullWidth
-                size="lg"
-                loading={loading}
-              >
+              <Button type="submit" fullWidth size="lg" loading={loading}>
                 Create Account
               </Button>
             </form>
 
             <p className="mt-6 text-center text-sm text-slate-600">
               Already have an account?{" "}
-              <Link
-                to="/login"
-                className="font-medium text-indigo-600"
-              >
+              <Link to="/login" className="font-medium text-indigo-600">
                 Login
               </Link>
             </p>

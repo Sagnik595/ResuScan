@@ -27,13 +27,47 @@ const LoginPage = () => {
     }));
   };
 
+  const validateForm = () => {
+    const { email, password } = formData;
+
+    // Email validation
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!email.trim()) {
+      toast.error("Email is required");
+      return false;
+    }
+    if (!emailRegex.test(email)) {
+      toast.error("Please enter a valid email");
+      return false;
+    }
+
+    // Password validation
+    if (!password.trim()) {
+      toast.error("Password is required");
+      return false;
+    }
+    if (password.length < 8) {
+      toast.error("Password must be at least 8 characters");
+      return false;
+    }
+
+    return true;
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    if (!validateForm()) {
+      return;
+    }
 
     try {
       setLoading(true);
 
-      const { data } = await api.post("/user/login", formData);
+      const { data } = await api.post("/user/login", {
+        email: formData.email.trim(),
+        password: formData.password,
+      });
 
       if (data.success) {
         login(data.token, "user");
@@ -43,9 +77,7 @@ const LoginPage = () => {
         toast.error(data.message);
       }
     } catch (error) {
-      toast.error(
-        error.response?.data?.message || "Login failed"
-      );
+      toast.error(error.response?.data?.message || "Login failed");
     } finally {
       setLoading(false);
     }
@@ -58,9 +90,7 @@ const LoginPage = () => {
       <section className="flex min-h-[calc(100vh-128px)] items-center bg-slate-50 py-12">
         <div className="container-custom">
           <div className="mx-auto max-w-md card p-8">
-            <h1 className="text-3xl font-bold text-slate-900">
-              Welcome Back
-            </h1>
+            <h1 className="text-3xl font-bold text-slate-900">Welcome Back</h1>
 
             <p className="mt-2 text-slate-600">
               Sign in to your ResuScan account.
@@ -85,22 +115,14 @@ const LoginPage = () => {
                 required
               />
 
-              <Button
-                type="submit"
-                fullWidth
-                size="lg"
-                loading={loading}
-              >
+              <Button type="submit" fullWidth size="lg" loading={loading}>
                 Login
               </Button>
             </form>
 
             <p className="mt-6 text-center text-sm text-slate-600">
               Don&apos;t have an account?{" "}
-              <Link
-                to="/register"
-                className="font-medium text-indigo-600"
-              >
+              <Link to="/register" className="font-medium text-indigo-600">
                 Register
               </Link>
             </p>

@@ -1,36 +1,59 @@
-import React from "react";
-import {
-  FileText,
-  BarChart3,
-  Briefcase,
-} from "lucide-react";
+import React, { useEffect, useState } from "react";
+import { FileText, BarChart3, Briefcase } from "lucide-react";
+import { toast } from "react-toastify";
 
 import DashboardLayout from "../../components/layout/DashboardLayout";
 import StatsCard from "../../components/dashboard/StatsCard";
 import ResumeLimitCard from "../../components/dashboard/ResumeLimitCard";
 import RecentAnalysisCard from "../../components/dashboard/RecentAnalysisCard";
+import api from "../../services/axiosInstance";
 
 const DashboardPage = () => {
-  // Replace with API data later
-  const userData = {
-    resumeLimit: 7,
-    totalJobs: 25,
-    totalAnalyses: 3,
-    latestAnalysis: {
-      analysisId: "123",
-      score: 82,
-      jobTitle: "Frontend Developer",
-      company: "Tech Corp",
-    },
-  };
+  const [userData, setUserData] = useState({
+    resumeLimit: 0,
+    totalJobs: 0,
+    totalAnalyses: 0,
+    latestAnalysis: null,
+  });
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchDashboardData = async () => {
+      try {
+        setLoading(true);
+
+        // Fetch user data
+        const userRes = await api.get("/user/profile");
+        if (userRes.data.success) {
+          setUserData((prev) => ({
+            ...prev,
+            resumeLimit: userRes.data.data?.resumeLimit || 0,
+          }));
+        }
+
+        // Fetch jobs count
+        const jobsRes = await api.get("/user/jobs");
+        if (jobsRes.data.success) {
+          setUserData((prev) => ({
+            ...prev,
+            totalJobs: jobsRes.data.data?.length || 0,
+          }));
+        }
+      } catch (error) {
+        toast.error("Failed to load dashboard data");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchDashboardData();
+  }, []);
 
   return (
     <DashboardLayout>
       <div className="space-y-8">
         <div>
-          <h1 className="text-3xl font-bold text-slate-900">
-            Dashboard
-          </h1>
+          <h1 className="text-3xl font-bold text-slate-900">Dashboard</h1>
           <p className="mt-2 text-slate-600">
             Overview of your resume analysis activity.
           </p>
@@ -54,9 +77,7 @@ const DashboardPage = () => {
           />
         </div>
 
-        <RecentAnalysisCard
-          {...userData.latestAnalysis}
-        />
+        <RecentAnalysisCard {...userData.latestAnalysis} />
       </div>
     </DashboardLayout>
   );

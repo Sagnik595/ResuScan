@@ -20,6 +20,7 @@ const AuthContextProvider = ({ children }) => {
     setRoleState(getRole());
     setLoading(false);
   }, []);
+  
 
   const login = (jwtToken, userRole = "user") => {
     setToken(jwtToken);
