@@ -1,15 +1,60 @@
-import express from 'express'
-import {loginUser, registerUser} from '../controller/userController.js';
-import multer from 'multer';
-import authUser from '../middleware/authUser.js';
-import { handleupload, textparse } from '../controller/resumeController.js';
-import { parseJD, uploadJD } from '../controller/jobController.js';
+// import express from 'express'
+// import {loginUser, registerUser} from '../controller/userController.js';
+// import multer from 'multer';
+// import authUser from '../middleware/authUser.js';
+// import { handleupload, textparse } from '../controller/resumeController.js';
+// import { parseJD, uploadJD } from '../controller/jobController.js';
+
+// const userRouter = express.Router();
+// const storage = multer.diskStorage({
+//   destination: "uploads/",
+//   filename: (req, file, cb) => {
+//     cb(null, Date.now() + "-" + file.originalname);
+//   },
+// });
+
+// const fileFilter = (req, file, cb) => {
+//   const allowed = [
+//     "application/pdf",
+//     "application/msword",
+//     "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+//   ];
+//   if (allowed.includes(file.mimetype)) cb(null, true);
+//   else cb(new Error("Invalid file type"), false);
+// };
+
+// const upload = multer({
+//   storage,
+//   limits: { fileSize: 5 * 1024 * 1024 },
+//   fileFilter,
+// });
+
+// userRouter.post("/register",registerUser);
+// userRouter.post("/login",loginUser);
+// userRouter.post("/upload", authUser,upload.single('pdf'),handleupload);
+// userRouter.post("/parse",authUser,textparse);
+
+// export default userRouter;
+
+import express from "express";
+import multer from "multer";
+import path from "path";
+
+import { loginUser, registerUser, getUserProfile } from "../controller/userController.js";
+import authUser from "../middleware/authUser.js";
+
+import { handleupload, textparse } from "../controller/resumeController.js";
+import { getAllJD, getSingleJD } from "../controller/jobController.js";
 
 const userRouter = express.Router();
+
+// Multer configuration with filename sanitization
 const storage = multer.diskStorage({
   destination: "uploads/",
   filename: (req, file, cb) => {
-    cb(null, Date.now() + "-" + file.originalname);
+    // Sanitize filename to prevent path traversal attacks
+    const sanitized = path.basename(file.originalname);
+    cb(null, Date.now() + "-" + sanitized);
   },
 });
 
@@ -19,6 +64,7 @@ const fileFilter = (req, file, cb) => {
     "application/msword",
     "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
   ];
+
   if (allowed.includes(file.mimetype)) cb(null, true);
   else cb(new Error("Invalid file type"), false);
 };
@@ -29,9 +75,12 @@ const upload = multer({
   fileFilter,
 });
 
-userRouter.post("/register",registerUser);
-userRouter.post("/login",loginUser);
-userRouter.post("/upload", authUser,upload.single('pdf'),handleupload);
-userRouter.post("/parse",authUser,textparse);
+userRouter.post("/register", registerUser);
+userRouter.post("/login", loginUser);
+userRouter.get("/profile", authUser, getUserProfile);
+userRouter.post("/upload", authUser, upload.single("pdf"), handleupload);
+userRouter.post("/parse", authUser, textparse);
+userRouter.get("/jobs", authUser, getAllJD);
+userRouter.get("/jobs/:id", authUser, getSingleJD);
 
 export default userRouter;

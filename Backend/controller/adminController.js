@@ -6,7 +6,7 @@ const adminLogin = async(req,res)=>{
 
     try {
         const {email,password} = req.body;
-        if(email!==process.env.ADMIN_EMAIl)
+        if(email!==process.env.ADMIN_EMAIL)
             return res.json({success:false,message:"Only admin email allowed!!"});
         if(password!==process.env.ADMIN_PASSWORD)
             return res.json({success:false,message:"Invalid Password!!"});
@@ -22,7 +22,10 @@ const adminLogin = async(req,res)=>{
 
 
 const getAllUser = async(req,res)=>{
+    const AdminRole = req.userRole;
     try {
+        if(AdminRole !== "admin")
+            return res.json({success:false,message:"You are not authorized!!"});
         const userData = await user.find().select("-password -_id -__v");
         return res.json({success:true,data:userData});
     } catch (error) {

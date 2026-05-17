@@ -50,17 +50,13 @@ const Navbar = () => {
                   Dashboard
                 </Button>
               </Link>
-              <Button
-                variant="ghost"
-                icon={LogOut}
-                onClick={handleLogout}
-              >
+              <Button variant="ghost" icon={LogOut} onClick={handleLogout}>
                 Logout
               </Button>
             </>
           ) : (
             <>
-              <Link to="/login">
+              <Link to="/login-choice">
                 <Button variant="ghost">Login</Button>
               </Link>
               <Link to="/register">
@@ -99,7 +95,7 @@ const Navbar = () => {
               </>
             ) : (
               <>
-                <Link to="/login" onClick={() => setIsOpen(false)}>
+                <Link to="/login-choice" onClick={() => setIsOpen(false)}>
                   Login
                 </Link>
                 <Link to="/register" onClick={() => setIsOpen(false)}>

@@ -124,7 +124,7 @@ const JobsPage = () => {
                   </Link>
 
                   <Link
-                    to={`/analysis?jobId=${job._id}`}
+                    to={`/analysis/${job._id}`}
                     className="flex-1 rounded-lg bg-indigo-600 px-4 py-2 text-center text-sm font-medium text-white hover:bg-indigo-700"
                   >
                     Analyze

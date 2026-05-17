@@ -17,20 +17,17 @@ const LandingPage = () => {
     {
       icon: Upload,
       title: "Upload Resume",
-      description:
-        "Upload your resume in PDF, DOC, or DOCX format.",
+      description: "Upload your resume in PDF, DOC, or DOCX format.",
     },
     {
       icon: Brain,
       title: "AI Analysis",
-      description:
-        "Compare your skills against real job descriptions.",
+      description: "Compare your skills against real job descriptions.",
     },
     {
       icon: BarChart3,
       title: "Match Score",
-      description:
-        "Get a detailed compatibility score and missing skills.",
+      description: "Get a detailed compatibility score and missing skills.",
     },
   ];
 
@@ -58,9 +55,9 @@ const LandingPage = () => {
               </h1>
 
               <p className="mt-6 text-lg leading-relaxed text-slate-600">
-                Upload your resume, compare it with job descriptions,
-                and receive actionable recommendations to improve
-                your chances of getting hired.
+                Upload your resume, compare it with job descriptions, and
+                receive actionable recommendations to improve your chances of
+                getting hired.
               </p>
 
               <div className="mt-8 flex flex-wrap gap-4">
@@ -71,7 +68,7 @@ const LandingPage = () => {
                   </Button>
                 </Link>
 
-                <Link to="/login">
+                <Link to="/login-choice">
                   <Button variant="secondary" size="lg">
                     Sign In
                   </Button>
@@ -86,10 +83,7 @@ const LandingPage = () => {
 
               <div className="mt-6 space-y-4">
                 {benefits.map((item, index) => (
-                  <div
-                    key={index}
-                    className="flex items-start gap-3"
-                  >
+                  <div key={index} className="flex items-start gap-3">
                     <CheckCircle className="mt-0.5 h-5 w-5 text-green-500" />
                     <span className="text-slate-700">{item}</span>
                   </div>
@@ -125,9 +119,7 @@ const LandingPage = () => {
                     {feature.title}
                   </h3>
 
-                  <p className="mt-3 text-slate-600">
-                    {feature.description}
-                  </p>
+                  <p className="mt-3 text-slate-600">{feature.description}</p>
                 </div>
               );
             })}

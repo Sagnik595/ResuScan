@@ -1,23 +1,60 @@
-import React from "react";
-import {
-  Briefcase,
-  Users,
-  BarChart3,
-  PlusCircle,
-} from "lucide-react";
+import React, { useState, useEffect } from "react";
+import { Briefcase, Users, BarChart3, PlusCircle } from "lucide-react";
 import { Link } from "react-router-dom";
+import { toast } from "react-toastify";
 
 import AdminLayout from "../../components/layout/AdminLayout";
 import StatsCard from "../../components/dashboard/StatsCard";
 import Button from "../../components/common/Button";
+import Loader from "../../components/common/Loader";
+import api from "../../services/axiosInstance";
 
 const AdminDashboardPage = () => {
-  // Replace with real API data later
-  const stats = {
-    totalJobs: 24,
-    totalUsers: 132,
-    totalAnalyses: 486,
+  const [stats, setStats] = useState({
+    totalJobs: 0,
+    totalUsers: 0,
+    totalAnalyses: 0,
+  });
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetchDashboardStats();
+  }, []);
+
+  const fetchDashboardStats = async () => {
+    try {
+      setLoading(true);
+
+      // Fetch users
+      const usersResponse = await api.get("/admin/getusers");
+      const totalUsers = usersResponse.data?.data?.length || 0;
+
+      // Fetch all jobs
+      const jobsResponse = await api.get("/admin/allJD");
+      const totalJobs = jobsResponse.data?.data?.length || 0;
+
+      setStats({
+        totalJobs,
+        totalUsers,
+        totalAnalyses: 0, // This would need a separate API endpoint if needed
+      });
+    } catch (error) {
+      console.error("Error fetching dashboard stats:", error);
+      toast.error("Failed to load dashboard statistics");
+    } finally {
+      setLoading(false);
+    }
   };
+
+  if (loading) {
+    return (
+      <AdminLayout>
+        <div className="flex h-64 items-center justify-center">
+          <Loader />
+        </div>
+      </AdminLayout>
+    );
+  }
 
   return (
     <AdminLayout>
@@ -34,9 +71,7 @@ const AdminDashboardPage = () => {
           </div>
 
           <Link to="/admin/add-job">
-            <Button icon={PlusCircle}>
-              Add New Job
-            </Button>
+            <Button icon={PlusCircle}>Add New Job</Button>
           </Link>
         </div>
 

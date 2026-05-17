@@ -32,7 +32,7 @@
 //   if (!token) {
 //     return <Navigate to="/login" replace />;
 //   }
-  
+
 //   if (role !== "user") {
 //     return <Navigate to="/" replace />;
 //   }
@@ -207,17 +207,14 @@
 
 // export default AppRoutes;
 
-
-
 import React, { useContext } from "react";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
-import AuthContextProvider, {
-  AuthContext,
-} from "../context/AuthContext";
+import AuthContextProvider, { AuthContext } from "../context/AuthContext";
 import ResumeContextProvider from "../context/ResumeContext";
 
 // Public Pages
 import LandingPage from "../pages/public/LandingPage";
+import LoginChoicePage from "../pages/public/LoginChoicePage";
 import LoginPage from "../pages/public/LoginPage";
 import RegisterPage from "../pages/public/RegisterPage";
 import NotFoundPage from "../pages/public/NotFoundPage";
@@ -294,6 +291,15 @@ const AppRoutes = () => {
               element={
                 <PublicRoute>
                   <LandingPage />
+                </PublicRoute>
+              }
+            />
+
+            <Route
+              path="/login-choice"
+              element={
+                <PublicRoute>
+                  <LoginChoicePage />
                 </PublicRoute>
               }
             />

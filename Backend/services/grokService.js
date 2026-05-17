@@ -35,19 +35,43 @@ Missing Skills: ${missingSkills.join(", ")}
 Match Score: ${matchScore}%
 `;
 
-  const chat = await groq.chat.completions.create({
-    messages: [
-      {
-        role: "user",
-        content: prompt,
-      },
-    ],
-    model: "openai/gpt-oss-20b",
-  });
+  try {
+    const chat = await groq.chat.completions.create({
+      messages: [
+        {
+          role: "user",
+          content: prompt,
+        },
+      ],
+      model: "openai/gpt-oss-20b",
+    });
 
-  console.log(chat.choices[0]?.message?.content || "");
+    const finalText = (chat.choices[0]?.message?.content || "").trim();
+    
+    if (!finalText) {
+      throw new Error("Empty response from Groq API");
+    }
 
-  const finalText = (chat.choices[0]?.message?.content || "").trim();
-  const jsonMatch = finalText.match(/\{[\s\S]*\}/);
-  return JSON.parse(jsonMatch[0]);
+    const jsonMatch = finalText.match(/\{[\s\S]*\}/);
+    
+    if (!jsonMatch) {
+      throw new Error("No JSON found in AI response");
+    }
+
+    try {
+      return JSON.parse(jsonMatch[0]);
+    } catch (parseError) {
+      console.error("JSON parse error:", parseError.message);
+      // Return default recommendations
+      return {
+        skill_improvements: ["Learn the missing technical skills"],
+        resume_improvements: ["Quantify achievements with metrics"],
+        project_suggestions: ["Build projects using required technologies"],
+        learning_roadmap: ["Follow structured learning path for growth"],
+      };
+    }
+  } catch (error) {
+    console.error("Groq API error:", error.message);
+    throw new Error("Failed to generate AI recommendations");
+  }
 }

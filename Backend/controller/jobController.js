@@ -16,25 +16,37 @@ import { extractSkills } from "../utils/extractSkills.js";
 // API to upload job description
 const uploadJD = async (req, res) => {
   try {
-    const { jdData,cName,jTitle,location,salary,deadline} = req.body;
-    if (!jdData)
-      return res.json({
+    const { jdData, cName, jTitle, location, salary, deadline } = req.body;
+    
+    // Validate all required fields
+    if (!jdData || !cName || !jTitle || !deadline) {
+      return res.status(400).json({
         success: false,
-        message: "Please provide a valid job description!!",
+        message: "Missing required fields: jdData, cName, jTitle, deadline",
       });
+    }
+
+    // Validate deadline is in the future
+    if (new Date(deadline) <= new Date()) {
+      return res.status(400).json({
+        success: false,
+        message: "Deadline must be in the future",
+      });
+    }
 
     const data = await jd.create({
-      comName:cName,
-      jobTitle:jTitle,
+      comName: cName,
+      jobTitle: jTitle,
       desc: jdData,
-      location,
-      salary,
-      deadline
+      location: location || "Not specified",
+      salary: salary || "Not disclosed",
+      deadline,
     });
-    return res.json({ success: true, message: "JD uploaded", data: data._id });
+    
+    return res.status(201).json({ success: true, message: "Job created successfully", data: data._id });
   } catch (error) {
     console.log(error);
-    return res.json({ success: false, message: error.message });
+    return res.status(500).json({ success: false, message: "Failed to upload job description" });
   }
 };
 
