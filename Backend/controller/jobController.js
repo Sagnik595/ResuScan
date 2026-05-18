@@ -110,7 +110,7 @@ const getAllJD = async(req,res)=>{
 //API to get single JOB details
 const getSingleJD = async(req,res)=>{
   try {
-    const {id} = req.body;
+    const {id} = req.params;
     if(!id)
       return res.json({success:false,message:"No ID provided!!"});
     const data = await jd.findById(id);
