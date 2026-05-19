@@ -40,7 +40,11 @@ import express from "express";
 import multer from "multer";
 import path from "path";
 
-import { loginUser, registerUser, getUserProfile } from "../controller/userController.js";
+import {
+  loginUser,
+  registerUser,
+  getUserProfile,
+} from "../controller/userController.js";
 import authUser from "../middleware/authUser.js";
 
 import { handleupload, textparse } from "../controller/resumeController.js";
@@ -50,7 +54,10 @@ const userRouter = express.Router();
 
 // Multer configuration with filename sanitization
 const storage = multer.diskStorage({
-  destination: "uploads/",
+  destination: (req, file, cb) => {
+    const uploadDir = path.resolve("uploads");
+    cb(null, uploadDir);
+  },
   filename: (req, file, cb) => {
     // Sanitize filename to prevent path traversal attacks
     const sanitized = path.basename(file.originalname);
