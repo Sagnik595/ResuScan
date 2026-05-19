@@ -1,93 +1,3 @@
-// import React, { useEffect, useState } from "react";
-// import { FileText, BarChart3, Briefcase } from "lucide-react";
-// import { toast } from "react-toastify";
-
-// import DashboardLayout from "../../components/layout/DashboardLayout";
-// import StatsCard from "../../components/dashboard/StatsCard";
-// import ResumeLimitCard from "../../components/dashboard/ResumeLimitCard";
-// import RecentAnalysisCard from "../../components/dashboard/RecentAnalysisCard";
-// import api from "../../services/axiosInstance";
-
-// const DashboardPage = () => {
-//   const [userData, setUserData] = useState({
-//     resumeLimit: 0,
-//     totalJobs: 0,
-//     totalAnalyses: 0,
-//     latestAnalysis: null,
-//   });
-//   const [loading, setLoading] = useState(true);
-
-//   useEffect(() => {
-//     const fetchDashboardData = async () => {
-//       try {
-//         setLoading(true);
-
-//         // Fetch user data
-//         const userRes = await api.get("/user/profile");
-//         if (userRes.data.success) {
-//           setUserData((prev) => ({
-//             ...prev,
-//             resumeLimit: userRes.data.data?.resumeLimit || 0,
-//           }));
-//         }
-
-//         // Fetch jobs count
-//         const jobsRes = await api.get("/user/jobs");
-//         if (jobsRes.data.success) {
-//           setUserData((prev) => ({
-//             ...prev,
-//             totalJobs: jobsRes.data.data?.length || 0,
-//           }));
-//         }
-//       } catch (error) {
-//         toast.error("Failed to load dashboard data");
-//       } finally {
-//         setLoading(false);
-//       }
-//     };
-
-//     fetchDashboardData();
-//   }, []);
-
-//   return (
-//     <DashboardLayout>
-//       <div className="space-y-8">
-//         <div>
-//           <h1 className="text-3xl font-bold text-slate-900">Dashboard</h1>
-//           <p className="mt-2 text-slate-600">
-//             Overview of your resume analysis activity.
-//           </p>
-//         </div>
-
-//         <div className="grid gap-6 md:grid-cols-3">
-//           <ResumeLimitCard remaining={userData.resumeLimit} />
-
-//           <StatsCard
-//             title="Jobs Available"
-//             value={userData.totalJobs}
-//             icon={Briefcase}
-//             color="blue"
-//           />
-
-//           <StatsCard
-//             title="Analyses Completed"
-//             value={userData.totalAnalyses}
-//             icon={BarChart3}
-//             color="green"
-//           />
-//         </div>
-
-//         <RecentAnalysisCard {...userData.latestAnalysis} />
-//       </div>
-//     </DashboardLayout>
-//   );
-// };
-
-// export default DashboardPage;
-
-
-
-
 import React, { useEffect, useState } from "react";
 import { FileText, BarChart3, Briefcase, ArrowUpRight, Sparkles, Clock, ChevronRight, TrendingUp } from "lucide-react";
 import { toast } from "react-toastify";
@@ -97,31 +7,27 @@ import api from "../../services/axiosInstance";
 
 /* ─────────────────────────── styles ─────────────────────────── */
 const styles = `
-  @import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Epilogue:ital,wght@0,300;0,400;0,500;1,300&display=swap');
+  @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap');
 
   :root {
-    --ink:      #0f1117;
-    --ink-2:    #3a3d4a;
-    --ink-3:    #7a7e8e;
-    --ink-4:    #b8bcc8;
-    --surface:  #f5f4f0;
-    --paper:    #ffffff;
-    --rule:     #e8e6e0;
-    --amber:    #f59e0b;
-    --amber-lt: #fef3c7;
-    --teal:     #0d9488;
-    --teal-lt:  #ccfbf1;
-    --rose:     #e11d48;
-    --rose-lt:  #ffe4e6;
-    --blue:     #2563eb;
-    --blue-lt:  #dbeafe;
+    --bg-main:      #05070f;
+    --surface-card: #0c0f1e;
+    --accent-indigo:#6366f1;
+    --accent-violet:#8b5cf6;
+    --accent-emerald:#10b981;
+    --text-primary: #ffffff;
+    --text-muted:   #7b82a8;
+    --border-glow:  rgba(99, 102, 241, 0.15);
+    --border-card:  rgba(255, 255, 255, 0.07);
   }
 
   .db-root {
-    font-family: 'Epilogue', sans-serif;
-    background: var(--surface);
+    font-family: 'Outfit', sans-serif;
+    background: var(--bg-main);
     min-height: 100vh;
-    color: var(--ink);
+    color: var(--text-primary);
+    padding: 2rem;
+    box-sizing: border-box;
   }
 
   /* ── page header ── */
@@ -130,7 +36,7 @@ const styles = `
     align-items: flex-end;
     justify-content: space-between;
     padding-bottom: 2rem;
-    border-bottom: 2px solid var(--ink);
+    border-bottom: 1px solid var(--border-card);
     margin-bottom: 2.5rem;
     gap: 1rem;
     animation: fadeDown .5s cubic-bezier(.22,1,.36,1) both;
@@ -139,55 +45,52 @@ const styles = `
     from { opacity: 0; transform: translateY(-16px); }
     to   { opacity: 1; transform: translateY(0); }
   }
-  .db-header-left {}
+  
   .db-eyebrow {
     display: inline-flex;
     align-items: center;
     gap: 6px;
-    font-family: 'Syne', sans-serif;
-    font-size: 10.5px;
+    font-size: 0.72rem;
     font-weight: 600;
-    letter-spacing: .18em;
+    letter-spacing: .12em;
     text-transform: uppercase;
-    color: var(--ink-3);
+    color: var(--accent-indigo);
     margin-bottom: .6rem;
   }
   .db-eyebrow-dot {
     width: 6px; height: 6px;
     border-radius: 50%;
-    background: var(--amber);
+    background: var(--accent-emerald);
   }
   .db-title {
-    font-family: 'Syne', sans-serif;
-    font-size: clamp(2rem, 4vw, 3.25rem);
-    font-weight: 800;
-    line-height: .95;
-    letter-spacing: -.03em;
-    color: var(--ink);
+    font-size: clamp(2rem, 4vw, 2.75rem);
+    font-weight: 700;
+    line-height: 1.1;
+    letter-spacing: -.02em;
+    color: var(--text-primary);
+    margin: 0;
   }
   .db-title-accent {
-    font-family: 'Epilogue', sans-serif;
-    font-style: italic;
     font-weight: 300;
-    color: var(--ink-3);
-    font-size: clamp(1.1rem, 2vw, 1.6rem);
+    color: var(--text-muted);
+    font-size: clamp(1rem, 2vw, 1.25rem);
     display: block;
     margin-top: .35rem;
-    letter-spacing: -.01em;
+    letter-spacing: normal;
   }
   .db-date-badge {
     display: flex;
     align-items: center;
     gap: 8px;
-    background: var(--paper);
-    border: 1.5px solid var(--rule);
+    background: var(--surface-card);
+    border: 1px solid var(--border-card);
     border-radius: 100px;
     padding: 8px 16px;
-    font-size: 12.5px;
-    color: var(--ink-2);
+    font-size: 13px;
+    color: var(--text-muted);
     white-space: nowrap;
   }
-  .db-date-badge svg { color: var(--ink-3); }
+  .db-date-badge svg { color: var(--accent-indigo); }
 
   /* ── stats grid ── */
   .db-stats-grid {
@@ -205,34 +108,27 @@ const styles = `
 
   /* stat card */
   .db-stat {
-    background: var(--paper);
-    border: 1.5px solid var(--rule);
-    border-radius: 16px;
-    padding: 1.6rem 1.5rem;
+    background: var(--surface-card);
+    border: 1px solid var(--border-card);
+    border-radius: 20px;
+    padding: 1.75rem 1.5rem;
     position: relative;
     overflow: hidden;
     cursor: default;
-    transition: transform .2s, box-shadow .2s, border-color .2s;
+    transition: transform .25s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow .25s, border-color .25s;
   }
   .db-stat:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 12px 40px rgba(15,17,23,.08);
-    border-color: var(--ink-4);
-  }
-  .db-stat.featured {
-    grid-column: span 1;
-    background: var(--ink);
-    border-color: var(--ink);
-    color: white;
+    transform: translateY(-4px);
+    box-shadow: 0 12px 30px var(--border-glow);
+    border-color: rgba(99, 102, 241, 0.4);
   }
   .db-stat-corner {
     position: absolute;
     top: 0; right: 0;
     width: 80px; height: 80px;
-    border-radius: 0 16px 0 80px;
-    opacity: .06;
+    border-radius: 0 20px 0 80px;
+    opacity: .04;
   }
-  .db-stat.featured .db-stat-corner { opacity: .12; background: white; }
   .db-stat-top {
     display: flex;
     align-items: flex-start;
@@ -240,78 +136,64 @@ const styles = `
     margin-bottom: 1.25rem;
   }
   .db-stat-icon-wrap {
-    width: 38px; height: 38px;
-    border-radius: 10px;
+    width: 42px; height: 42px;
+    border-radius: 12px;
     display: flex;
     align-items: center;
     justify-content: center;
     flex-shrink: 0;
   }
   .db-stat-arrow {
-    width: 30px; height: 30px;
+    width: 32px; height: 32px;
     border-radius: 50%;
-    border: 1.5px solid var(--rule);
+    border: 1px solid var(--border-card);
     display: flex;
     align-items: center;
     justify-content: center;
-    color: var(--ink-3);
-    transition: background .2s, color .2s;
+    color: var(--text-muted);
+    transition: background .2s, color .2s, border-color .2s;
   }
   .db-stat:hover .db-stat-arrow {
-    background: var(--ink);
+    background: linear-gradient(135deg, var(--accent-indigo), var(--accent-violet));
     color: white;
-    border-color: var(--ink);
-  }
-  .db-stat.featured .db-stat-arrow {
-    border-color: rgba(255,255,255,.2);
-    color: rgba(255,255,255,.5);
-  }
-  .db-stat.featured:hover .db-stat-arrow {
-    background: white;
-    color: var(--ink);
-    border-color: white;
+    border-color: transparent;
   }
   .db-stat-label {
-    font-family: 'Syne', sans-serif;
-    font-size: 10.5px;
+    font-size: 0.72rem;
     font-weight: 600;
-    letter-spacing: .14em;
+    letter-spacing: .08em;
     text-transform: uppercase;
-    color: var(--ink-3);
+    color: var(--text-muted);
     margin-bottom: .4rem;
   }
-  .db-stat.featured .db-stat-label { color: rgba(255,255,255,.45); }
   .db-stat-value {
-    font-family: 'Syne', sans-serif;
-    font-size: 3rem;
-    font-weight: 800;
+    font-size: 2.75rem;
+    font-weight: 700;
     line-height: 1;
-    letter-spacing: -.04em;
-    color: var(--ink);
-    margin-bottom: .3rem;
+    letter-spacing: -.03em;
+    color: var(--text-primary);
+    margin-bottom: .5rem;
   }
-  .db-stat.featured .db-stat-value { color: white; }
   .db-stat-sub {
     font-size: 12px;
-    color: var(--ink-3);
+    color: var(--text-muted);
     display: flex;
     align-items: center;
     gap: 4px;
   }
-  .db-stat.featured .db-stat-sub { color: rgba(255,255,255,.38); }
   .db-stat-pill {
     display: inline-flex;
     align-items: center;
-    gap: 3px;
-    font-size: 10.5px;
-    font-weight: 600;
-    padding: 2px 8px;
+    gap: 4px;
+    font-size: 11px;
+    font-weight: 500;
+    padding: 3px 10px;
     border-radius: 100px;
   }
 
   /* loading skeleton */
   .db-skeleton {
-    background: linear-gradient(90deg, var(--rule) 25%, var(--surface) 50%, var(--rule) 75%);
+    background: linear-gradient(90deg, #0c0f1e 25%, #171b36 50%, #0c0f1e 75%);
     background-size: 200% 100%;
     animation: shimmer 1.4s infinite;
     border-radius: 8px;
@@ -321,15 +203,10 @@ const styles = `
     100% { background-position: -200% 0; }
   }
 
-  /* ── number count-up ── */
-  .db-countup {
-    display: inline-block;
-  }
-
   /* ── bottom grid ── */
   .db-bottom {
     display: grid;
-    grid-template-columns: 1fr 360px;
+    grid-template-columns: 1fr 380px;
     gap: 1.25rem;
     margin-top: 1.25rem;
   }
@@ -337,80 +214,90 @@ const styles = `
     .db-bottom { grid-template-columns: 1fr; }
   }
 
-  /* recent analysis card */
-  .db-analysis {
-    background: var(--paper);
-    border: 1.5px solid var(--rule);
-    border-radius: 16px;
-    padding: 1.75rem;
-    transition: box-shadow .2s;
+  /* cards components */
+  .db-analysis, .db-actions {
+    background: var(--surface-card);
+    border: 1px solid var(--border-card);
+    border-radius: 20px;
+    padding: 2rem;
+    transition: transform .25s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow .25s, border-color .25s;
+    box-sizing: border-box;
   }
-  .db-analysis:hover { box-shadow: 0 8px 32px rgba(15,17,23,.06); }
+  .db-analysis:hover, .db-actions:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 30px var(--border-glow);
+    border-color: rgba(99, 102, 241, 0.4);
+  }
+  
   .db-section-label {
-    font-family: 'Syne', sans-serif;
-    font-size: 10px;
-    font-weight: 700;
-    letter-spacing: .2em;
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: .12em;
     text-transform: uppercase;
-    color: var(--ink-3);
-    margin-bottom: 1.25rem;
+    color: var(--accent-indigo);
+    margin-bottom: 1.5rem;
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: 10px;
   }
   .db-section-label::after {
     content: '';
     flex: 1; height: 1px;
-    background: var(--rule);
+    background: var(--border-card);
   }
+  
   .db-analysis-empty {
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    gap: 10px;
-    padding: 3rem 1rem;
-    color: var(--ink-4);
+    gap: 12px;
+    padding: 3.5rem 1rem;
+    color: var(--text-muted);
     text-align: center;
   }
   .db-analysis-empty-icon {
-    width: 52px; height: 52px;
-    border-radius: 14px;
-    background: var(--surface);
+    width: 54px; height: 54px;
+    border-radius: 16px;
+    background: rgba(99, 102, 241, 0.1);
     display: flex;
     align-items: center;
     justify-content: center;
-    color: var(--ink-4);
+    color: var(--accent-indigo);
   }
   .db-analysis-empty p {
-    font-size: 13px;
-    color: var(--ink-3);
-    max-width: 200px;
-    line-height: 1.6;
+    font-size: 14px;
+    color: var(--text-muted);
+    max-width: 220px;
+    line-height: 1.5;
+    margin: 0;
   }
-  .db-analysis-content {}
+  
   .db-analysis-header {
     display: flex;
     align-items: flex-start;
     justify-content: space-between;
-    margin-bottom: 1.25rem;
+    margin-bottom: 1.5rem;
     gap: 1rem;
   }
   .db-analysis-title {
-    font-family: 'Syne', sans-serif;
-    font-size: 1.15rem;
-    font-weight: 700;
-    color: var(--ink);
-    line-height: 1.25;
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    line-height: 1.3;
   }
   .db-analysis-meta {
     display: flex;
     align-items: center;
     gap: 6px;
-    font-size: 12px;
-    color: var(--ink-3);
-    margin-top: 4px;
+    font-size: 13px;
+    color: var(--text-muted);
+    margin-top: 6px;
   }
+  .db-analysis-meta svg {
+    color: var(--text-muted);
+  }
+  
   .db-score-ring-wrap { flex-shrink: 0; }
   .db-score-ring { position: relative; width: 72px; height: 72px; }
   .db-score-ring svg { transform: rotate(-90deg); }
@@ -421,33 +308,32 @@ const styles = `
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    font-family: 'Syne', sans-serif;
-    font-weight: 800;
-    font-size: 1.1rem;
-    color: var(--ink);
-    letter-spacing: -.03em;
+    font-weight: 700;
+    font-size: 1.2rem;
+    color: var(--text-primary);
     line-height: 1;
   }
   .db-score-ring-text small {
     font-size: 9px;
-    font-weight: 500;
-    color: var(--ink-3);
+    font-weight: 400;
+    color: var(--text-muted);
     letter-spacing: .05em;
+    margin-top: 2px;
   }
 
   /* score bars */
-  .db-bars { display: flex; flex-direction: column; gap: .7rem; }
-  .db-bar-row { display: flex; align-items: center; gap: 10px; }
+  .db-bars { display: flex; flex-direction: column; gap: .85rem; }
+  .db-bar-row { display: flex; align-items: center; gap: 12px; }
   .db-bar-label {
-    font-size: 11.5px;
-    color: var(--ink-2);
-    width: 110px;
+    font-size: 13px;
+    color: var(--text-primary);
+    width: 100px;
     flex-shrink: 0;
   }
   .db-bar-track {
     flex: 1;
-    height: 5px;
-    background: var(--surface);
+    height: 6px;
+    background: rgba(255, 255, 255, 0.05);
     border-radius: 10px;
     overflow: hidden;
   }
@@ -457,10 +343,9 @@ const styles = `
     transition: width 1.2s cubic-bezier(.22,1,.36,1);
   }
   .db-bar-pct {
-    font-family: 'Syne', sans-serif;
-    font-size: 11px;
-    font-weight: 700;
-    color: var(--ink-2);
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--text-muted);
     width: 28px;
     text-align: right;
     flex-shrink: 0;
@@ -468,24 +353,17 @@ const styles = `
 
   /* quick actions panel */
   .db-actions {
-    background: var(--ink);
-    border: 1.5px solid var(--ink);
-    border-radius: 16px;
-    padding: 1.75rem;
     display: flex;
     flex-direction: column;
     gap: 0;
   }
-  .db-actions .db-section-label { color: rgba(255,255,255,.3); }
-  .db-actions .db-section-label::after { background: rgba(255,255,255,.08); }
   .db-action-btn {
     display: flex;
     align-items: center;
-    gap: 12px;
-    padding: 13px 0;
-    border-bottom: 1px solid rgba(255,255,255,.07);
+    gap: 14px;
+    padding: 14px 0;
+    border-bottom: 1px solid var(--border-card);
     cursor: pointer;
-    transition: opacity .15s;
     background: none;
     border-left: none;
     border-right: none;
@@ -493,12 +371,12 @@ const styles = `
     width: 100%;
     text-align: left;
     color: inherit;
+    transition: background 0.2s;
   }
-  .db-action-btn:first-of-type { border-top: 1px solid rgba(255,255,255,.07); }
-  .db-action-btn:hover { opacity: .7; }
+  .db-action-btn:first-of-type { border-top: 1px solid var(--border-card); }
   .db-action-icon {
-    width: 34px; height: 34px;
-    border-radius: 8px;
+    width: 36px; height: 36px;
+    border-radius: 10px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -506,24 +384,26 @@ const styles = `
   }
   .db-action-text { flex: 1; }
   .db-action-name {
-    font-family: 'Syne', sans-serif;
-    font-size: 13px;
-    font-weight: 600;
-    color: rgba(255,255,255,.9);
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--text-primary);
     line-height: 1.2;
   }
   .db-action-desc {
-    font-size: 11px;
-    color: rgba(255,255,255,.3);
-    margin-top: 2px;
+    font-size: 12px;
+    color: var(--text-muted);
+    margin-top: 3px;
   }
   .db-action-arr {
-    color: rgba(255,255,255,.25);
-    transition: color .15s, transform .15s;
+    color: var(--text-muted);
+    transition: color .2s, transform .2s;
   }
-  .db-action-btn:hover .db-action-arr { color: rgba(255,255,255,.7); transform: translateX(3px); }
+  .db-action-btn:hover .db-action-arr { 
+    color: var(--accent-indigo); 
+    transform: translateX(4px); 
+  }
 
-  /* card animations */
+  /* card entry animation setups */
   .db-stat { animation: cardIn .45s cubic-bezier(.22,1,.36,1) both; }
   .db-stat:nth-child(1) { animation-delay: .05s; }
   .db-stat:nth-child(2) { animation-delay: .12s; }
@@ -531,7 +411,7 @@ const styles = `
   .db-analysis { animation: cardIn .45s .28s cubic-bezier(.22,1,.36,1) both; }
   .db-actions  { animation: cardIn .45s .34s cubic-bezier(.22,1,.36,1) both; }
   @keyframes cardIn {
-    from { opacity: 0; transform: translateY(20px); }
+    from { opacity: 0; transform: translateY(15px); }
     to   { opacity: 1; transform: translateY(0); }
   }
 `;
@@ -557,11 +437,11 @@ function useCountUp(target, duration = 900) {
 function ScoreRing({ score = 0, size = 72 }) {
   const r = 28, circ = 2 * Math.PI * r;
   const filled = ((score / 100) * circ).toFixed(1);
-  const color = score >= 75 ? "#0d9488" : score >= 50 ? "#f59e0b" : "#e11d48";
+  const color = score >= 75 ? "#10b981" : score >= 50 ? "#8b5cf6" : "#6366f1";
   return (
     <div className="db-score-ring">
       <svg width={size} height={size} viewBox="0 0 72 72">
-        <circle cx="36" cy="36" r={r} fill="none" stroke="#e8e6e0" strokeWidth="5" />
+        <circle cx="36" cy="36" r={r} fill="none" stroke="rgba(255,255,255,0.05)" strokeWidth="5" />
         <circle
           cx="36" cy="36" r={r}
           fill="none"
@@ -580,17 +460,17 @@ function ScoreRing({ score = 0, size = 72 }) {
 }
 
 /* ─── stat card ─── */
-function StatCard({ label, value, icon: Icon, iconBg, iconColor, cornerBg, pill, pillColor, pillBg, featured }) {
+function StatCard({ label, value, icon: Icon, iconBg, iconColor, cornerBg, pill, pillColor, pillBg }) {
   const count = useCountUp(value, 900);
   return (
-    <div className={`db-stat${featured ? " featured" : ""}`}>
+    <div className="db-stat">
       <div className="db-stat-corner" style={{ background: cornerBg }} />
       <div className="db-stat-top">
         <div className="db-stat-icon-wrap" style={{ background: iconBg }}>
-          <Icon size={18} color={iconColor} />
+          <Icon size={20} color={iconColor} />
         </div>
         <div className="db-stat-arrow">
-          <ArrowUpRight size={14} />
+          <ArrowUpRight size={15} />
         </div>
       </div>
       <div className="db-stat-label">{label}</div>
@@ -598,7 +478,7 @@ function StatCard({ label, value, icon: Icon, iconBg, iconColor, cornerBg, pill,
       {pill && (
         <div className="db-stat-sub">
           <span className="db-stat-pill" style={{ background: pillBg, color: pillColor }}>
-            <TrendingUp size={9} /> {pill}
+            <TrendingUp size={11} style={{ marginRight: '2px' }} /> {pill}
           </span>
         </div>
       )}
@@ -643,10 +523,10 @@ const DashboardPage = () => {
   const la = userData.latestAnalysis;
 
   const bars = [
-    { label: "ATS Score",      pct: la?.atsScore    ?? 0, color: "#0d9488" },
-    { label: "Keywords",       pct: la?.keywords    ?? 0, color: "#2563eb" },
-    { label: "Formatting",     pct: la?.formatting  ?? 0, color: "#f59e0b" },
-    { label: "Readability",    pct: la?.readability ?? 0, color: "#e11d48" },
+    { label: "ATS Score",   pct: la?.atsScore    ?? 0, color: "#6366f1" },
+    { label: "Keywords",    pct: la?.keywords    ?? 0, color: "#8b5cf6" },
+    { label: "Formatting",  pct: la?.formatting  ?? 0, color: "#10b981" },
+    { label: "Readability", pct: la?.readability ?? 0, color: "#6366f1" },
   ];
 
   return (
@@ -668,7 +548,7 @@ const DashboardPage = () => {
               </h1>
             </div>
             <div className="db-date-badge">
-              <Clock size={13} />
+              <Clock size={14} />
               {now}
             </div>
           </div>
@@ -679,35 +559,34 @@ const DashboardPage = () => {
               label="Resume Credits"
               value={loading ? 0 : userData.resumeLimit}
               icon={FileText}
-              iconBg="#fef3c7"
-              iconColor="#d97706"
-              cornerBg="#f59e0b"
+              iconBg="rgba(99, 102, 241, 0.12)"
+              iconColor="#6366f1"
+              cornerBg="#6366f1"
               pill="+2 this week"
-              pillColor="#92400e"
-              pillBg="#fde68a"
+              pillColor="#6366f1"
+              pillBg="rgba(99, 102, 241, 0.1)"
             />
             <StatCard
               label="Jobs Available"
               value={loading ? 0 : userData.totalJobs}
               icon={Briefcase}
-              iconBg="#dbeafe"
-              iconColor="#2563eb"
-              cornerBg="#2563eb"
+              iconBg="rgba(139, 92, 246, 0.12)"
+              iconColor="#8b5cf6"
+              cornerBg="#8b5cf6"
               pill="Live listings"
-              pillColor="#1e3a8a"
-              pillBg="#bfdbfe"
+              pillColor="#8b5cf6"
+              pillBg="rgba(139, 92, 246, 0.1)"
             />
             <StatCard
               label="Analyses Done"
               value={loading ? 0 : userData.totalAnalyses}
               icon={BarChart3}
-              iconBg="#ccfbf1"
-              iconColor="#0d9488"
-              cornerBg="#0d9488"
+              iconBg="rgba(16, 185, 129, 0.12)"
+              iconColor="#10b981"
+              cornerBg="#10b981"
               pill="All time"
-              pillColor="#134e4a"
-              pillBg="#99f6e4"
-              featured
+              pillColor="#10b981"
+              pillBg="rgba(16, 185, 129, 0.1)"
             />
           </div>
 
@@ -730,7 +609,7 @@ const DashboardPage = () => {
                     <div>
                       <div className="db-analysis-title">{la.jobTitle || "Resume Analysis"}</div>
                       <div className="db-analysis-meta">
-                        <Clock size={11} />
+                        <Clock size={13} />
                         {la.createdAt ? new Date(la.createdAt).toLocaleDateString() : "—"}
                         {la.company && <> · {la.company}</>}
                       </div>
@@ -766,42 +645,42 @@ const DashboardPage = () => {
               {[
                 {
                   icon: FileText,
-                  bg: "rgba(245,158,11,.18)",
-                  color: "#f59e0b",
+                  bg: "rgba(99, 102, 241, 0.12)",
+                  color: "#6366f1",
                   name: "Analyze Resume",
                   desc: "Upload & score your resume",
                 },
                 {
                   icon: Briefcase,
-                  bg: "rgba(37,99,235,.18)",
-                  color: "#60a5fa",
+                  bg: "rgba(139, 92, 246, 0.12)",
+                  color: "#8b5cf6",
                   name: "Browse Jobs",
                   desc: "Find matching listings",
                 },
                 {
                   icon: BarChart3,
-                  bg: "rgba(13,148,136,.18)",
-                  color: "#2dd4bf",
+                  bg: "rgba(16, 185, 129, 0.12)",
+                  color: "#10b981",
                   name: "View History",
                   desc: "Past analyses & scores",
                 },
                 {
                   icon: Sparkles,
-                  bg: "rgba(225,29,72,.18)",
-                  color: "#fb7185",
+                  bg: "rgba(99, 102, 241, 0.12)",
+                  color: "#6366f1",
                   name: "AI Suggestions",
                   desc: "Get personalized tips",
                 },
               ].map((a) => (
                 <button key={a.name} className="db-action-btn">
                   <div className="db-action-icon" style={{ background: a.bg }}>
-                    <a.icon size={15} color={a.color} />
+                    <a.icon size={16} color={a.color} />
                   </div>
                   <div className="db-action-text">
                     <div className="db-action-name">{a.name}</div>
                     <div className="db-action-desc">{a.desc}</div>
                   </div>
-                  <ChevronRight size={15} className="db-action-arr" />
+                  <ChevronRight size={16} className="db-action-arr" />
                 </button>
               ))}
             </div>

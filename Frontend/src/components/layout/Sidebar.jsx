@@ -1,5 +1,5 @@
 import React from "react";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import {
   Briefcase,
   FileSearch,
@@ -13,47 +13,60 @@ import useAuth from "../../hooks/useAuth";
 
 /* ─── Styles ─────────────────────────────────────────────────────────────────── */
 const STYLES = `
-  @import url('https://fonts.googleapis.com/css2?family=Syne:wght@600;700;800&family=DM+Sans:wght@300;400;500&display=swap');
+  @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap');
 
   :root {
-    --sb-bg:            #f5f0e8;
-    --sb-surface:       #ede8df;
-    --sb-surface-2:     #e5dfd4;
-    --sb-border:        rgba(160,140,110,0.18);
-    --sb-border-md:     rgba(140,120,90,0.28);
-    --sb-accent:        #d97706;
-    --sb-accent-2:      #b45309;
-    --sb-accent-light:  rgba(217,119,6,0.1);
-    --sb-text:          #1c1712;
-    --sb-text-2:        #6b5f4a;
-    --sb-text-3:        #a89880;
-    --sb-danger:        #b91c1c;
-    --sb-danger-bg:     rgba(185,28,28,0.07);
-    --sb-danger-border: rgba(185,28,28,0.15);
-    --sb-green:         #16a34a;
+    --sb-bg:            #05070f;
+    --sb-surface:       #0c0f1e;
+    --sb-surface-2:     #111526;
+    --sb-border:        rgba(255,255,255,0.07);
+    --sb-border-md:     rgba(255,255,255,0.1);
+    --sb-accent:        #6366f1;
+    --sb-accent-2:      #8b5cf6;
+    --sb-accent-3:      #10b981;
+    --sb-accent-light:  rgba(99,102,241,0.1);
+    --sb-text:          #eef0ff;
+    --sb-text-2:        #7b82a8;
+    --sb-text-3:        #4a5080;
+    --sb-danger:        #f87171;
+    --sb-danger-bg:     rgba(239,68,68,0.08);
+    --sb-danger-border: rgba(239,68,68,0.15);
   }
 
   .sb-root {
+    top: 0;
     height: 100vh;
-    font-family: 'DM Sans', sans-serif;
+    font-family: 'Outfit', sans-serif;
     display: flex;
     flex-direction: column;
-    height: 100vh;
     width: 272px;
     flex-shrink: 0;
     background: var(--sb-bg);
     border-right: 1px solid var(--sb-border);
-    position: relative;
+    position: sticky;
+    max-height: 100vh;
     overflow: hidden;
   }
 
-  /* warm top blush */
+  /* indigo glow orb top-left */
+  .sb-root::before {
+    content: '';
+    position: absolute;
+    top: -60px; left: -60px;
+    width: 280px; height: 280px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(99,102,241,0.1) 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  /* emerald glow bottom */
   .sb-root::after {
     content: '';
     position: absolute;
-    top: 0; left: 0; right: 0;
-    height: 200px;
-    background: linear-gradient(160deg, rgba(217,119,6,0.06) 0%, transparent 70%);
+    bottom: 0; right: -40px;
+    width: 180px; height: 180px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(16,185,129,0.06) 0%, transparent 70%);
     pointer-events: none;
   }
 
@@ -82,41 +95,47 @@ const STYLES = `
   .sb-logo-icon {
     width: 36px; height: 36px;
     border-radius: 10px;
-    background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+    background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
     display: flex;
     align-items: center;
     justify-content: center;
-    box-shadow: 0 2px 12px rgba(217,119,6,0.3), inset 0 1px 0 rgba(255,255,255,0.25);
+    box-shadow: 0 0 16px rgba(99,102,241,0.35), inset 0 1px 0 rgba(255,255,255,0.15);
     flex-shrink: 0;
   }
 
   .sb-logo-text {
-    font-family: 'Syne', sans-serif;
+    font-family: 'Outfit', sans-serif;
     font-size: 1.18rem;
-    font-weight: 800;
+    font-weight: 700;
     letter-spacing: -0.025em;
-    color: var(--sb-text);
+    background: linear-gradient(135deg, #6366f1, #8b5cf6);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  .sb-logo-text span {
+    -webkit-text-fill-color: #10b981;
   }
 
   .sb-logo-badge {
     margin-left: auto;
     font-size: 0.58rem;
-    font-family: 'Syne', sans-serif;
-    font-weight: 700;
+    font-family: 'Outfit', sans-serif;
+    font-weight: 600;
     letter-spacing: 0.1em;
     text-transform: uppercase;
-    color: var(--sb-accent-2);
-    background: rgba(217,119,6,0.1);
-    border: 1px solid rgba(217,119,6,0.22);
+    color: var(--sb-accent);
+    background: rgba(99,102,241,0.1);
+    border: 1px solid rgba(99,102,241,0.22);
     padding: 0.18rem 0.5rem;
-    border-radius: 6px;
+    border-radius: 100px;
   }
 
   /* ── Section label ── */
   .sb-section-label {
-    font-family: 'Syne', sans-serif;
+    font-family: 'Outfit', sans-serif;
     font-size: 0.6rem;
-    font-weight: 700;
+    font-weight: 600;
     letter-spacing: 0.16em;
     text-transform: uppercase;
     color: var(--sb-text-3);
@@ -145,7 +164,7 @@ const STYLES = `
     align-items: center;
     gap: 0.75rem;
     padding: 0.62rem 0.9rem;
-    border-radius: 11px;
+    border-radius: 12px;
     text-decoration: none;
     font-size: 0.85rem;
     font-weight: 500;
@@ -169,7 +188,7 @@ const STYLES = `
     left: 0; top: 22%; bottom: 22%;
     width: 3px;
     border-radius: 0 3px 3px 0;
-    background: var(--sb-accent);
+    background: linear-gradient(180deg, var(--sb-accent), var(--sb-accent-2));
     opacity: 0;
     transform: scaleY(0);
     transition: opacity 0.2s, transform 0.22s cubic-bezier(0.22,1,0.36,1);
@@ -183,11 +202,11 @@ const STYLES = `
   }
 
   .sb-link.active {
-    color: var(--sb-accent-2);
-    background: linear-gradient(90deg, rgba(217,119,6,0.1) 0%, rgba(217,119,6,0.04) 100%);
-    border-color: rgba(217,119,6,0.2);
+    color: var(--sb-text);
+    background: linear-gradient(90deg, rgba(99,102,241,0.12) 0%, rgba(99,102,241,0.04) 100%);
+    border-color: rgba(99,102,241,0.2);
     transform: translateX(3px);
-    box-shadow: 0 1px 6px rgba(217,119,6,0.08);
+    box-shadow: 0 0 16px rgba(99,102,241,0.08);
   }
   .sb-link.active::after {
     opacity: 1;
@@ -201,18 +220,20 @@ const STYLES = `
     align-items: center;
     justify-content: center;
     flex-shrink: 0;
-    transition: background 0.2s;
+    color: var(--sb-text-2);
+    transition: background 0.2s, color 0.2s;
   }
-  .sb-link:hover .sb-icon-wrap  { background: var(--sb-surface-2); }
-  .sb-link.active .sb-icon-wrap { background: rgba(217,119,6,0.12); }
+  .sb-link:hover .sb-icon-wrap  { background: var(--sb-surface-2); color: var(--sb-text); }
+  .sb-link.active .sb-icon-wrap { background: rgba(99,102,241,0.15); color: var(--sb-accent); }
 
   .sb-link-text { flex: 1; }
 
   .sb-active-dot {
     width: 6px; height: 6px;
     border-radius: 50%;
-    background: var(--sb-accent);
+    background: var(--sb-accent-3);
     flex-shrink: 0;
+    box-shadow: 0 0 6px rgba(16,185,129,0.5);
     animation: sbDotPulse 2.2s ease-in-out infinite;
   }
   @keyframes sbDotPulse {
@@ -240,7 +261,7 @@ const STYLES = `
     align-items: center;
     gap: 0.65rem;
     padding: 0.6rem 0.85rem;
-    border-radius: 11px;
+    border-radius: 12px;
     background: var(--sb-surface);
     border: 1px solid var(--sb-border);
     margin-bottom: 0.45rem;
@@ -251,16 +272,16 @@ const STYLES = `
   .sb-user-avatar {
     width: 30px; height: 30px;
     border-radius: 8px;
-    background: linear-gradient(135deg, #f59e0b, #d97706);
+    background: linear-gradient(135deg, #6366f1, #8b5cf6);
     display: flex;
     align-items: center;
     justify-content: center;
-    font-family: 'Syne', sans-serif;
+    font-family: 'Outfit', sans-serif;
     font-size: 0.75rem;
     font-weight: 700;
     color: white;
     flex-shrink: 0;
-    box-shadow: 0 1px 6px rgba(217,119,6,0.25);
+    box-shadow: 0 0 10px rgba(99,102,241,0.3);
   }
 
   .sb-user-info { flex: 1; min-width: 0; }
@@ -282,8 +303,8 @@ const STYLES = `
   .sb-status-dot {
     width: 7px; height: 7px;
     border-radius: 50%;
-    background: var(--sb-green);
-    box-shadow: 0 0 5px rgba(22,163,74,0.4);
+    background: var(--sb-accent-3);
+    box-shadow: 0 0 6px rgba(16,185,129,0.5);
     flex-shrink: 0;
   }
 
@@ -293,11 +314,11 @@ const STYLES = `
     gap: 0.75rem;
     width: 100%;
     padding: 0.62rem 0.9rem;
-    border-radius: 11px;
+    border-radius: 12px;
     border: 1px solid transparent;
     background: none;
     cursor: pointer;
-    font-family: 'DM Sans', sans-serif;
+    font-family: 'Outfit', sans-serif;
     font-size: 0.85rem;
     font-weight: 500;
     color: var(--sb-text-2);
@@ -309,7 +330,8 @@ const STYLES = `
     border-color: var(--sb-danger-border);
   }
   .sb-logout:hover .sb-logout-icon-wrap {
-    background: rgba(185,28,28,0.08);
+    background: rgba(239,68,68,0.08);
+    color: var(--sb-danger);
   }
 
   .sb-logout-icon-wrap {
@@ -319,7 +341,8 @@ const STYLES = `
     align-items: center;
     justify-content: center;
     flex-shrink: 0;
-    transition: background 0.2s;
+    color: var(--sb-text-2);
+    transition: background 0.2s, color 0.2s;
   }
 `;
 
@@ -350,6 +373,7 @@ const Sidebar = ({ admin = false }) => {
   ];
 
   const links = admin ? adminLinks : userLinks;
+  const navigate = useNavigate();
 
   return (
     <aside className="sb-root">
@@ -359,7 +383,9 @@ const Sidebar = ({ admin = false }) => {
           <div className="sb-logo-icon">
             <Zap size={18} color="white" strokeWidth={2.5} />
           </div>
-          <span className="sb-logo-text">ResuScan</span>
+          <span className="sb-logo-text">
+            Resu<span>Scan</span>
+          </span>
           <span className="sb-logo-badge">{admin ? "Admin" : "User"}</span>
         </div>
 
@@ -400,7 +426,7 @@ const Sidebar = ({ admin = false }) => {
             <div className="sb-user-avatar">
               {admin ? "A" : "U"}
             </div>
-            <div className="sb-user-info">
+            <div onClick={()=>{navigate('/profile')}} className="cursor-pointer sb-user-info">
               <div className="sb-user-name">{admin ? "Admin User" : "My Account"}</div>
               <div className="sb-user-role">{admin ? "Administrator" : "Job Seeker"}</div>
             </div>

@@ -1,308 +1,36 @@
-// import React, { useEffect, useState } from "react";
-// import { useParams } from "react-router-dom";
-// import { toast } from "react-toastify";
-// import { Upload, FileText } from "lucide-react";
-
-// import DashboardLayout from "../../components/layout/DashboardLayout";
-// import AnalysisSummary from "../../components/analysis/AnalysisSummary";
-// import Loader from "../../components/common/Loader";
-// import api from "../../services/axiosInstance";
-
-// const AnalysisPage = () => {
-//   const { id: jobId } = useParams();
-//   const [step, setStep] = useState("upload"); // "upload" or "results"
-//   const [loading, setLoading] = useState(false);
-//   const [analyzing, setAnalyzing] = useState(false);
-//   const [analysis, setAnalysis] = useState(null);
-//   const [error, setError] = useState(null);
-//   const [file, setFile] = useState(null);
-//   const [resumeId, setResumeId] = useState(null);
-//   const [uploadProgress, setUploadProgress] = useState("");
-
-//   // Handle resume file selection
-//   const handleFileSelect = async (selectedFile) => {
-//     setFile(selectedFile);
-
-//     try {
-//       setLoading(true);
-//       setError(null);
-//       setUploadProgress("Uploading resume...");
-
-//       const formData = new FormData();
-//       formData.append("pdf", selectedFile);
-
-//       const uploadRes = await api.post("/user/upload", formData, {
-//         headers: {
-//           "Content-Type": "multipart/form-data",
-//         },
-//       });
-
-//       if (!uploadRes.data.success) {
-//         toast.error(uploadRes.data.message);
-//         setError(uploadRes.data.message);
-//         return;
-//       }
-
-//       setResumeId(uploadRes.data.resumeId);
-//       setUploadProgress("Parsing resume...");
-
-//       const parseRes = await api.post("/user/parse", {
-//         resumeId: uploadRes.data.resumeId,
-//       });
-
-//       if (parseRes.data.success) {
-//         setUploadProgress("Resume ready. Analyzing...");
-//         // Now proceed to analyze
-//         await performAnalysis(uploadRes.data.resumeId);
-//       } else {
-//         toast.error(parseRes.data.message);
-//         setError(parseRes.data.message);
-//       }
-//     } catch (error) {
-//       const errorMsg = error.response?.data?.message || "Upload failed";
-//       toast.error(errorMsg);
-//       setError(errorMsg);
-//     } finally {
-//       setLoading(false);
-//       setUploadProgress("");
-//     }
-//   };
-
-//   // Perform analysis
-//   const performAnalysis = async (rid) => {
-//     try {
-//       setAnalyzing(true);
-//       setError(null);
-
-//       const analyzeRes = await api.post("/report/analyze", {
-//         jid: jobId,
-//         rid: rid || resumeId,
-//       });
-
-//       if (analyzeRes.data.success) {
-//         setAnalysis(analyzeRes.data);
-//         setStep("results");
-//         toast.success("Analysis completed!");
-//       } else {
-//         toast.error(analyzeRes.data.message);
-//         setError(analyzeRes.data.message);
-//       }
-//     } catch (err) {
-//       const errorMsg = err.response?.data?.message || "Analysis failed";
-//       toast.error(errorMsg);
-//       setError(errorMsg);
-//     } finally {
-//       setAnalyzing(false);
-//     }
-//   };
-
-//   // Handle drag and drop
-//   const handleDragOver = (e) => {
-//     e.preventDefault();
-//     e.stopPropagation();
-//   };
-
-//   const handleDrop = (e) => {
-//     e.preventDefault();
-//     e.stopPropagation();
-//     const files = e.dataTransfer.files;
-//     if (files.length > 0) {
-//       handleFileSelect(files[0]);
-//     }
-//   };
-
-//   // Upload step
-//   if (step === "upload") {
-//     return (
-//       <DashboardLayout>
-//         <div className="space-y-8">
-//           <div>
-//             <h1 className="text-3xl font-bold text-slate-900">
-//               Analyze Your Resume
-//             </h1>
-//             <p className="mt-2 text-slate-600">
-//               Upload your resume to see how well it matches this job.
-//             </p>
-//           </div>
-
-//           {error && (
-//             <div className="card p-4 bg-red-50 border border-red-200 rounded-lg">
-//               <p className="text-red-600">{error}</p>
-//             </div>
-//           )}
-
-//           <div
-//             className="card p-8 border-2 border-dashed border-indigo-300 rounded-2xl text-center cursor-pointer hover:border-indigo-500 transition-colors"
-//             onDragOver={handleDragOver}
-//             onDrop={handleDrop}
-//             onClick={() => document.getElementById("fileInput").click()}
-//           >
-//             <input
-//               id="fileInput"
-//               type="file"
-//               accept=".pdf,.doc,.docx"
-//               onChange={(e) =>
-//                 e.target.files && handleFileSelect(e.target.files[0])
-//               }
-//               className="hidden"
-//             />
-
-//             <Upload className="mx-auto h-12 w-12 text-indigo-600 mb-4" />
-
-//             <h3 className="text-lg font-semibold text-slate-900 mb-2">
-//               Upload Your Resume
-//             </h3>
-
-//             <p className="text-slate-600 mb-4">
-//               Drag and drop your resume file here, or click to select
-//             </p>
-
-//             <p className="text-xs text-slate-500">
-//               Accepted formats: PDF, DOC, DOCX (Max 5MB)
-//             </p>
-
-//             {loading && (
-//               <div className="mt-4">
-//                 <div className="animate-spin inline-block h-5 w-5 border-2 border-indigo-600 border-t-transparent rounded-full"></div>
-//                 <p className="text-indigo-600 text-sm mt-2">{uploadProgress}</p>
-//               </div>
-//             )}
-
-//             {file && !loading && (
-//               <div className="mt-4">
-//                 <div className="flex items-center justify-center gap-2 text-green-600">
-//                   <FileText className="h-5 w-5" />
-//                   <span className="text-sm font-medium">{file.name}</span>
-//                 </div>
-//               </div>
-//             )}
-//           </div>
-//         </div>
-//       </DashboardLayout>
-//     );
-//   }
-
-//   // Results step
-//   if (analyzing) {
-//     return (
-//       <DashboardLayout>
-//         <Loader text="Analyzing your resume against the job..." />
-//       </DashboardLayout>
-//     );
-//   }
-
-//   if (error && step === "results") {
-//     return (
-//       <DashboardLayout>
-//         <div className="card p-8 text-center">
-//           <p className="text-red-600 font-semibold">{error}</p>
-//           <button
-//             onClick={() => {
-//               setStep("upload");
-//               setError(null);
-//               setAnalysis(null);
-//             }}
-//             className="mt-4 px-6 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700"
-//           >
-//             Try Another Resume
-//           </button>
-//         </div>
-//       </DashboardLayout>
-//     );
-//   }
-
-//   if (!analysis && step === "results") {
-//     return (
-//       <DashboardLayout>
-//         <div className="card p-8 text-center">
-//           <p className="text-slate-600">No analysis data available</p>
-//           <button
-//             onClick={() => {
-//               setStep("upload");
-//               setAnalysis(null);
-//             }}
-//             className="mt-4 px-6 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700"
-//           >
-//             Upload Resume
-//           </button>
-//         </div>
-//       </DashboardLayout>
-//     );
-//   }
-
-//   return (
-//     <DashboardLayout>
-//       <div className="space-y-8">
-//         <div className="flex items-center justify-between">
-//           <div>
-//             <h1 className="text-3xl font-bold text-slate-900">
-//               Analysis Report
-//             </h1>
-//             <p className="mt-2 text-slate-600">
-//               Detailed breakdown of your resume-job match.
-//             </p>
-//           </div>
-
-//           <button
-//             onClick={() => {
-//               setStep("upload");
-//               setAnalysis(null);
-//             }}
-//             className="px-6 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors"
-//           >
-//             Analyze Another
-//           </button>
-//         </div>
-
-//         {analysis && <AnalysisSummary analysis={analysis} />}
-//       </div>
-//     </DashboardLayout>
-//   );
-// };
-
-// export default AnalysisPage;
-
-
-
-
 import React, { useEffect, useState, useRef } from "react";
 import { useParams } from "react-router-dom";
 import { toast } from "react-toastify";
-import { Upload, FileText, Cpu, CheckCircle2, AlertCircle, RotateCcw, Zap, ScanLine, ChevronRight } from "lucide-react";
+import { Upload, FileText, Cpu, CheckCircle2, AlertCircle, RotateCcw, Zap, ScanLine } from "lucide-react";
 
 import DashboardLayout from "../../components/layout/DashboardLayout";
 import AnalysisSummary from "../../components/analysis/AnalysisSummary";
 import api from "../../services/axiosInstance";
 
 /* ══════════════════════════════════════════════════
-   STYLES
+    STYLES (Dark SaaS Theme)
 ══════════════════════════════════════════════════ */
 const styles = `
-  @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Manrope:wght@300;400;500;600;700;800&display=swap');
+  @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500&display=swap');
 
   :root {
-    --bg:        #0c0e12;
-    --bg-2:      #12151b;
-    --bg-3:      #181c24;
-    --border:    rgba(255,255,255,.07);
-    --border-hi: rgba(6,182,212,.35);
-    --cyan:      #06b6d4;
-    --cyan-dim:  rgba(6,182,212,.12);
-    --cyan-glow: rgba(6,182,212,.25);
-    --green:     #10b981;
-    --amber:     #f59e0b;
-    --red:       #f43f5e;
-    --text:      #e2e8f0;
-    --text-2:    #94a3b8;
-    --text-3:    #475569;
-    --mono:      'IBM Plex Mono', monospace;
-    --sans:      'Manrope', sans-serif;
+    --bg:          #05070f;
+    --surface:     #0c0f1e;
+    --border:      rgba(255, 255, 255, 0.07);
+    --indigo:      #6366f1;
+    --violet:      #8b5cf6;
+    --emerald:     #10b981;
+    --text-muted:  #7b82a8;
+    --text-main:   #f1f5f9;
+    --mono:        'IBM Plex Mono', monospace;
+    --sans:        'Outfit', sans-serif;
   }
 
   .an-root {
     font-family: var(--sans);
-    color: var(--text);
+    color: var(--text-main);
     min-height: 100%;
+    background-color: var(--bg);
   }
 
   /* ── page header ── */
@@ -319,69 +47,93 @@ const styles = `
     to   { opacity: 1; transform: translateY(0); }
   }
   .an-breadcrumb {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    font-family: var(--mono);
-    font-size: 10px;
-    color: var(--text-3);
+    font-family: var(--sans);
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    font-weight: 600;
+    color: var(--indigo);
     margin-bottom: .6rem;
-    letter-spacing: .05em;
+    letter-spacing: .08em;
   }
-  .an-breadcrumb .sep { color: var(--cyan); }
+  .an-breadcrumb .sep { 
+    color: var(--text-muted); 
+    margin: 0 4px;
+    text-transform: none;
+  }
   .an-title {
     font-family: var(--sans);
     font-size: clamp(1.6rem, 3vw, 2.2rem);
     font-weight: 800;
-    color: var(--text);
+    color: var(--text-main);
     line-height: 1.1;
-    letter-spacing: -.03em;
+    letter-spacing: -.02em;
   }
   .an-title-tag {
     display: inline-flex;
     align-items: center;
     gap: 5px;
-    font-family: var(--mono);
-    font-size: 10px;
-    font-weight: 500;
-    color: var(--cyan);
-    background: var(--cyan-dim);
-    border: 1px solid var(--border-hi);
-    border-radius: 4px;
-    padding: 3px 8px;
-    margin-left: 10px;
+    font-family: var(--sans);
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--emerald);
+    background: rgba(16, 185, 129, 0.1);
+    border: 1px solid rgba(16, 185, 129, 0.2);
+    border-radius: 99s9px;
+    padding: 3px 10px;
+    margin-left: 12px;
     vertical-align: middle;
-    letter-spacing: .06em;
+    letter-spacing: .02em;
   }
   .an-sub {
     margin-top: .4rem;
-    font-size: 13.5px;
-    color: var(--text-2);
+    font-size: 14px;
+    color: var(--text-muted);
     font-weight: 400;
   }
 
-  /* ── re-analyze button ── */
-  .an-btn-outline {
+  /* ── pill-shaped buttons ── */
+  .an-btn-primary {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: linear-gradient(135deg, var(--indigo), var(--violet));
+    color: #ffffff;
+    font-weight: 600;
+    font-size: 13.5px;
+    padding: 10px 24px;
+    border-radius: 9999px;
+    border: none;
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s;
+    letter-spacing: .01em;
+  }
+  .an-btn-primary:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 20px rgba(99, 102, 241, 0.4);
+  }
+
+  .an-btn-ghost {
     display: inline-flex;
     align-items: center;
     gap: 7px;
-    padding: 9px 18px;
-    border: 1.5px solid var(--border-hi);
-    border-radius: 8px;
-    background: var(--cyan-dim);
-    color: var(--cyan);
+    padding: 9px 22px;
+    border: 1px solid var(--border);
+    border-radius: 9999px;
+    background: transparent;
+    color: var(--text-main);
     font-family: var(--sans);
-    font-size: 13px;
+    font-size: 13.5px;
     font-weight: 600;
     cursor: pointer;
     white-space: nowrap;
-    transition: background .2s, box-shadow .2s;
+    transition: background 0.2s, border-color 0.2s, box-shadow 0.2s;
     flex-shrink: 0;
     align-self: center;
   }
-  .an-btn-outline:hover {
-    background: rgba(6,182,212,.2);
-    box-shadow: 0 0 16px var(--cyan-glow);
+  .an-btn-ghost:hover {
+    background: rgba(99, 102, 241, 0.05);
+    border-color: var(--indigo);
+    box-shadow: 0 0 15px rgba(99, 102, 241, 0.15);
   }
 
   /* ── error banner ── */
@@ -389,75 +141,60 @@ const styles = `
     display: flex;
     align-items: flex-start;
     gap: 10px;
-    background: rgba(244,63,94,.08);
-    border: 1px solid rgba(244,63,94,.25);
-    border-radius: 10px;
+    background: rgba(244, 63, 94, 0.06);
+    border: 1px solid rgba(244, 63, 94, 0.2);
+    border-radius: 12px;
     padding: 1rem 1.25rem;
     margin-bottom: 1.5rem;
-    font-size: 13.5px;
+    font-size: 14px;
     color: #fda4af;
     animation: fadeIn .3s ease both;
   }
-  .an-error svg { flex-shrink: 0; margin-top: 1px; color: var(--red); }
+  .an-error svg { flex-shrink: 0; margin-top: 2px; color: #f43f5e; }
 
   /* ══════════════════════════════
-     UPLOAD ZONE
+      SaaS CARDS & UPLOAD ZONE
   ══════════════════════════════ */
   .an-upload-wrap {
     animation: cardIn .5s .05s cubic-bezier(.22,1,.36,1) both;
   }
   @keyframes cardIn {
-    from { opacity: 0; transform: translateY(24px); }
+    from { opacity: 0; transform: translateY(20px); }
     to   { opacity: 1; transform: translateY(0); }
   }
 
   .an-drop-zone {
     position: relative;
-    background: var(--bg-2);
-    border: 1.5px dashed rgba(6,182,212,.28);
-    border-radius: 18px;
-    padding: 4rem 2rem;
+    background: var(--surface);
+    border: 1px dashed rgba(99, 102, 241, 0.3);
+    border-radius: 20px;
+    padding: 4.5rem 2rem;
     text-align: center;
     cursor: pointer;
     overflow: hidden;
-    transition: border-color .2s, background .2s;
+    transition: border-color .3s, background .3s, transform .3s, box-shadow .3s;
   }
   .an-drop-zone:hover,
   .an-drop-zone.dragging {
-    border-color: var(--cyan);
-    background: rgba(6,182,212,.04);
+    border-color: var(--indigo);
+    background: rgba(12, 15, 30, 0.8);
+    transform: translateY(-4px);
+    box-shadow: 0 12px 30px rgba(99, 102, 241, 0.12);
   }
-  .an-drop-zone.dragging { box-shadow: 0 0 40px var(--cyan-glow); }
-
-  /* corner brackets */
-  .an-drop-zone::before,
-  .an-drop-zone::after {
-    content: '';
-    position: absolute;
-    width: 20px; height: 20px;
-    border-color: var(--cyan);
-    border-style: solid;
-    opacity: .45;
-    transition: opacity .2s;
-  }
-  .an-drop-zone::before { top: 12px; left: 12px; border-width: 2px 0 0 2px; border-radius: 3px 0 0 0; }
-  .an-drop-zone::after  { bottom: 12px; right: 12px; border-width: 0 2px 2px 0; border-radius: 0 0 3px 0; }
-  .an-drop-zone:hover::before,
-  .an-drop-zone:hover::after { opacity: .9; }
 
   /* scan line animation */
   .an-scan-line {
     position: absolute;
     left: 0; right: 0;
-    height: 1px;
-    background: linear-gradient(90deg, transparent, var(--cyan), transparent);
+    height: 2px;
+    background: linear-gradient(90deg, transparent, var(--indigo), transparent);
     opacity: 0;
     top: 0;
     transition: opacity .2s;
   }
   .an-drop-zone.loading .an-scan-line {
     opacity: 1;
-    animation: scanDown 1.8s ease-in-out infinite;
+    animation: scanDown 2s ease-in-out infinite;
   }
   @keyframes scanDown {
     0%   { top: 0%; opacity: 0; }
@@ -471,9 +208,9 @@ const styles = `
     position: absolute;
     inset: 0;
     background-image:
-      linear-gradient(rgba(6,182,212,.04) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(6,182,212,.04) 1px, transparent 1px);
-    background-size: 36px 36px;
+      linear-gradient(rgba(99, 102, 241, 0.02) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(99, 102, 241, 0.02) 1px, transparent 1px);
+    background-size: 40px 40px;
     pointer-events: none;
     opacity: 0;
     transition: opacity .3s;
@@ -492,42 +229,42 @@ const styles = `
   .an-drop-icon-ring {
     position: absolute;
     inset: 0;
-    border: 1.5px solid var(--border-hi);
+    border: 1px solid rgba(99, 102, 241, 0.2);
     border-radius: 50%;
-    animation: ringPulse 2.5s ease infinite;
+    animation: ringPulse 3s ease infinite;
   }
   .an-drop-icon-ring:nth-child(2) {
-    inset: -10px;
+    inset: -8px;
     opacity: .35;
-    animation-delay: .5s;
+    animation-delay: .6s;
   }
   @keyframes ringPulse {
-    0%,100% { opacity: .5; transform: scale(1); }
-    50% { opacity: .15; transform: scale(1.1); }
+    0%,100% { opacity: .4; transform: scale(1); }
+    50% { opacity: .1; transform: scale(1.08); }
   }
   .an-drop-icon-inner {
-    width: 52px; height: 52px;
+    width: 54px; height: 54px;
     border-radius: 50%;
-    background: linear-gradient(135deg, rgba(6,182,212,.15), rgba(6,182,212,.04));
-    border: 1.5px solid var(--border-hi);
+    background: rgba(99, 102, 241, 0.08);
+    border: 1px solid rgba(99, 102, 241, 0.2);
     display: flex;
     align-items: center;
     justify-content: center;
-    color: var(--cyan);
+    color: var(--indigo);
     position: relative;
     z-index: 1;
   }
   .an-drop-title {
     font-family: var(--sans);
-    font-size: 1.2rem;
+    font-size: 1.25rem;
     font-weight: 700;
-    color: var(--text);
+    color: var(--text-main);
     margin-bottom: .5rem;
-    letter-spacing: -.02em;
+    letter-spacing: -.01em;
   }
   .an-drop-sub {
-    font-size: 13.5px;
-    color: var(--text-2);
+    font-size: 14px;
+    color: var(--text-muted);
     margin-bottom: 1.5rem;
     line-height: 1.6;
   }
@@ -544,29 +281,10 @@ const styles = `
     font-weight: 500;
     padding: 3px 9px;
     border: 1px solid var(--border);
-    border-radius: 4px;
-    color: var(--text-3);
-    letter-spacing: .06em;
-    background: var(--bg-3);
-  }
-  .an-drop-cta {
-    display: inline-flex;
-    align-items: center;
-    gap: 7px;
-    background: var(--cyan);
-    color: #000;
-    font-weight: 700;
-    font-size: 13px;
-    padding: 10px 22px;
-    border-radius: 8px;
-    border: none;
-    cursor: pointer;
-    transition: filter .2s, box-shadow .2s;
-    letter-spacing: .01em;
-  }
-  .an-drop-cta:hover {
-    filter: brightness(1.1);
-    box-shadow: 0 0 24px var(--cyan-glow);
+    border-radius: 6px;
+    color: var(--text-muted);
+    letter-spacing: .04em;
+    background: rgba(255, 255, 255, 0.02);
   }
 
   /* loading state inside upload */
@@ -578,49 +296,49 @@ const styles = `
     padding: .5rem 0;
   }
   .an-loading-icon {
-    width: 52px; height: 52px;
+    width: 54px; height: 54px;
     border-radius: 50%;
-    background: var(--cyan-dim);
-    border: 1.5px solid var(--border-hi);
+    background: rgba(99, 102, 241, 0.1);
+    border: 1px solid rgba(99, 102, 241, 0.25);
     display: flex;
     align-items: center;
     justify-content: center;
-    color: var(--cyan);
+    color: var(--indigo);
     animation: iconPulse 1.5s ease infinite;
   }
   @keyframes iconPulse {
-    0%,100% { box-shadow: 0 0 0 0 var(--cyan-glow); }
+    0%,100% { box-shadow: 0 0 0 0 rgba(99, 102, 241, 0.2); }
     50% { box-shadow: 0 0 0 12px transparent; }
   }
   .an-loading-steps {
     display: flex;
     flex-direction: column;
-    gap: 6px;
+    gap: 8px;
     width: 100%;
-    max-width: 280px;
+    max-width: 290px;
   }
   .an-loading-step {
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: 10px;
     font-family: var(--mono);
     font-size: 11px;
-    color: var(--text-3);
-    padding: 6px 10px;
-    border-radius: 6px;
-    background: var(--bg-3);
+    color: var(--text-muted);
+    padding: 8px 12px;
+    border-radius: 10px;
+    background: rgba(255, 255, 255, 0.01);
     border: 1px solid var(--border);
     transition: all .3s;
   }
   .an-loading-step.active {
-    color: var(--cyan);
-    border-color: var(--border-hi);
-    background: var(--cyan-dim);
+    color: var(--indigo);
+    border-color: rgba(99, 102, 241, 0.3);
+    background: rgba(99, 102, 241, 0.04);
   }
   .an-loading-step.done {
-    color: var(--green);
-    border-color: rgba(16,185,129,.25);
-    background: rgba(16,185,129,.06);
+    color: var(--emerald);
+    border-color: rgba(16, 185, 129, 0.2);
+    background: rgba(16, 185, 129, 0.04);
   }
   .an-step-dot {
     width: 6px; height: 6px;
@@ -636,9 +354,9 @@ const styles = `
     50% { opacity: .2; }
   }
   .an-loading-prog {
-    font-size: 12px;
-    color: var(--text-2);
-    letter-spacing: .02em;
+    font-size: 13px;
+    color: var(--text-main);
+    font-weight: 500;
   }
 
   /* file selected chip */
@@ -646,18 +364,18 @@ const styles = `
     display: inline-flex;
     align-items: center;
     gap: 8px;
-    background: rgba(16,185,129,.08);
-    border: 1px solid rgba(16,185,129,.25);
+    background: rgba(16, 185, 129, 0.06);
+    border: 1px solid rgba(16, 185, 129, 0.2);
     border-radius: 8px;
     padding: 8px 14px;
     font-size: 13px;
-    color: #6ee7b7;
+    color: #a7f3d0;
     margin-top: .75rem;
   }
-  .an-file-chip svg { color: var(--green); }
+  .an-file-chip svg { color: var(--emerald); }
 
   /* ══════════════════════════════
-     ANALYZING OVERLAY
+      ANALYZING OVERLAY
   ══════════════════════════════ */
   .an-analyzing {
     display: flex;
@@ -682,32 +400,33 @@ const styles = `
     position: absolute;
     inset: 0;
     border-radius: 50%;
-    background: conic-gradient(var(--cyan), transparent 60%, transparent 80%, var(--cyan));
-    animation: orbSpin 1.2s linear infinite;
+    background: conic-gradient(var(--indigo), transparent 60%, transparent 80%, var(--violet));
+    animation: orbSpin 1.4s linear infinite;
   }
   @keyframes orbSpin { to { transform: rotate(360deg); } }
   .an-analyzing-orb-inner {
-    width: 74px; height: 74px;
+    width: 76px; height: 76px;
     border-radius: 50%;
-    background: var(--bg-2);
+    background: var(--surface);
+    border: 1px solid var(--border);
     display: flex;
     align-items: center;
     justify-content: center;
     position: relative;
     z-index: 1;
-    color: var(--cyan);
+    color: var(--indigo);
   }
   .an-analyzing-title {
     font-family: var(--sans);
-    font-size: 1.3rem;
+    font-size: 1.35rem;
     font-weight: 700;
-    color: var(--text);
-    letter-spacing: -.02em;
+    color: var(--text-main);
+    letter-spacing: -.01em;
   }
   .an-analyzing-sub {
     font-family: var(--mono);
     font-size: 11px;
-    color: var(--text-3);
+    color: var(--text-muted);
     letter-spacing: .08em;
     animation: textCycle 3s ease infinite;
   }
@@ -717,15 +436,15 @@ const styles = `
   }
   .an-analyzing-bar-wrap {
     width: 220px;
-    height: 3px;
-    background: var(--bg-3);
+    height: 4px;
+    background: rgba(255, 255, 255, 0.05);
     border-radius: 10px;
     overflow: hidden;
   }
   .an-analyzing-bar {
     height: 100%;
     width: 40%;
-    background: var(--cyan);
+    background: linear-gradient(90deg, var(--indigo), var(--violet));
     border-radius: 10px;
     animation: barSlide 1.8s ease-in-out infinite;
   }
@@ -735,85 +454,76 @@ const styles = `
   }
 
   /* ══════════════════════════════
-     RESULTS
+      RESULTS & CONTAINER CARDS
   ══════════════════════════════ */
   .an-results { animation: cardIn .5s cubic-bezier(.22,1,.36,1) both; }
 
   /* ── empty / error states ── */
   .an-state-card {
-    background: var(--bg-2);
-    border: 1.5px solid var(--border);
-    border-radius: 16px;
-    padding: 3.5rem 2rem;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 4rem 2rem;
     text-align: center;
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 1rem;
+    gap: 1.2rem;
     animation: cardIn .4s ease both;
+    transition: transform .3s, box-shadow .3s;
+  }
+  .an-state-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 30px rgba(99, 102, 241, 0.08);
   }
   .an-state-icon {
     width: 56px; height: 56px;
-    border-radius: 14px;
+    border-radius: 16px;
     display: flex;
     align-items: center;
     justify-content: center;
   }
   .an-state-title {
-    font-size: 1rem;
+    font-size: 1.1rem;
     font-weight: 700;
-    color: var(--text);
+    color: var(--text-main);
     letter-spacing: -.01em;
   }
   .an-state-sub {
-    font-size: 13px;
-    color: var(--text-2);
-    max-width: 260px;
+    font-size: 14px;
+    color: var(--text-muted);
+    max-width: 280px;
     line-height: 1.6;
   }
-  .an-state-btn {
-    display: inline-flex;
-    align-items: center;
-    gap: 7px;
-    background: var(--cyan);
-    color: #000;
-    font-weight: 700;
-    font-size: 13px;
-    padding: 10px 20px;
-    border-radius: 8px;
-    border: none;
-    cursor: pointer;
-    margin-top: .5rem;
-    transition: filter .2s, box-shadow .2s;
-  }
-  .an-state-btn:hover {
-    filter: brightness(1.1);
-    box-shadow: 0 0 20px var(--cyan-glow);
-  }
 
-  /* ── info strip below header on results page ── */
+  /* ── info strip ── */
   .an-info-strip {
     display: flex;
     align-items: center;
     gap: 1.5rem;
     margin-bottom: 2rem;
-    padding: .85rem 1.25rem;
-    background: var(--bg-2);
+    padding: .9rem 1.4rem;
+    background: var(--surface);
     border: 1px solid var(--border);
-    border-radius: 10px;
+    border-radius: 20px;
     flex-wrap: wrap;
     animation: fadeIn .4s .1s ease both;
+    transition: transform .3s, box-shadow .3s;
+  }
+  .an-info-strip:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(99, 102, 241, 0.06);
   }
   .an-info-item {
     display: flex;
     align-items: center;
-    gap: 6px;
+    gap: 8px;
     font-family: var(--mono);
-    font-size: 10.5px;
-    color: var(--text-3);
-    letter-spacing: .05em;
+    font-size: 11px;
+    color: var(--text-muted);
+    letter-spacing: .02em;
   }
-  .an-info-item svg { color: var(--cyan); }
+  .an-info-item svg { color: var(--indigo); }
   .an-info-sep {
     width: 1px;
     height: 16px;
@@ -822,18 +532,17 @@ const styles = `
   .an-info-badge {
     display: inline-flex;
     align-items: center;
-    gap: 4px;
-    font-family: var(--mono);
-    font-size: 10px;
-    padding: 2px 8px;
-    border-radius: 4px;
-    font-weight: 500;
-    letter-spacing: .06em;
+    gap: 5px;
+    font-family: var(--sans);
+    font-size: 11px;
+    padding: 3px 10px;
+    border-radius: 9999px;
+    font-weight: 600;
   }
 `;
 
 /* ══════════════════════════════════════════════════
-   SUB-COMPONENTS
+    SUB-COMPONENTS
 ══════════════════════════════════════════════════ */
 
 function AnalyzingView() {
@@ -848,7 +557,7 @@ function AnalyzingView() {
     <div className="an-analyzing">
       <div className="an-analyzing-orb">
         <div className="an-analyzing-orb-inner">
-          <Cpu size={30} />
+          <Cpu size={28} />
         </div>
       </div>
       <div>
@@ -942,7 +651,7 @@ function DropZone({ loading, file, uploadProgress, onFileSelect, onDrop }) {
                 <span className="an-format-chip" key={f}>{f}</span>
               ))}
             </div>
-            <button className="an-drop-cta" onClick={(e) => { e.stopPropagation(); document.getElementById("fileInput").click(); }}>
+            <button className="an-btn-primary" onClick={(e) => { e.stopPropagation(); document.getElementById("fileInput").click(); }}>
               <Zap size={14} /> Select File
             </button>
 
@@ -959,7 +668,7 @@ function DropZone({ loading, file, uploadProgress, onFileSelect, onDrop }) {
 }
 
 /* ══════════════════════════════════════════════════
-   MAIN PAGE
+    MAIN PAGE
 ══════════════════════════════════════════════════ */
 const AnalysisPage = () => {
   const { id: jobId } = useParams();
@@ -1045,7 +754,7 @@ const AnalysisPage = () => {
           <div className="an-header">
             <div>
               <div className="an-breadcrumb">analysis <span className="sep">/</span> processing</div>
-              <h1 className="an-title">Processing<span className="an-title-tag"><ScanLine size={9} /> LIVE</span></h1>
+              <h1 className="an-title">Processing<span className="an-title-tag"><ScanLine size={10} /> LIVE</span></h1>
               <p className="an-sub">Sit tight — your results will be ready in a moment.</p>
             </div>
           </div>
@@ -1068,12 +777,12 @@ const AnalysisPage = () => {
             </div>
           </div>
           <div className="an-state-card">
-            <div className="an-state-icon" style={{ background: "rgba(244,63,94,.1)" }}>
+            <div className="an-state-icon" style={{ background: "rgba(244,63,94,0.1)" }}>
               <AlertCircle size={24} color="#f43f5e" />
             </div>
             <div className="an-state-title">Something went wrong</div>
             <div className="an-state-sub">{error}</div>
-            <button className="an-state-btn" onClick={reset}>
+            <button className="an-btn-primary" onClick={reset}>
               <RotateCcw size={13} /> Try Again
             </button>
           </div>
@@ -1095,12 +804,12 @@ const AnalysisPage = () => {
             </div>
           </div>
           <div className="an-state-card">
-            <div className="an-state-icon" style={{ background: "rgba(6,182,212,.1)" }}>
-              <FileText size={24} color="var(--cyan)" />
+            <div className="an-state-icon" style={{ background: "rgba(99,102,241,0.1)" }}>
+              <FileText size={24} color="var(--indigo)" />
             </div>
             <div className="an-state-title">No analysis data available</div>
             <div className="an-state-sub">Upload a resume to generate your first analysis report.</div>
-            <button className="an-state-btn" onClick={reset}>
+            <button className="an-btn-primary" onClick={reset}>
               <Upload size={13} /> Upload Resume
             </button>
           </div>
@@ -1120,11 +829,13 @@ const AnalysisPage = () => {
               <div className="an-breadcrumb">analysis <span className="sep">/</span> report</div>
               <h1 className="an-title">
                 Analysis Report
-                <span className="an-title-tag"><CheckCircle2 size={9} /> COMPLETE</span>
+                <span className="an-title-tag" style={{ color: "var(--emerald)", background: "rgba(16,185,129,0.1)" }}>
+                  <CheckCircle2 size={10} /> COMPLETE
+                </span>
               </h1>
               <p className="an-sub">Detailed breakdown of your resume-to-job match.</p>
             </div>
-            <button className="an-btn-outline" onClick={reset}>
+            <button className="an-btn-ghost" onClick={reset}>
               <RotateCcw size={13} /> Analyze Another
             </button>
           </div>
@@ -1132,25 +843,25 @@ const AnalysisPage = () => {
           {/* info strip */}
           <div className="an-info-strip">
             <div className="an-info-item">
-              <FileText size={11} />
+              <FileText size={12} />
               {file?.name || "resume.pdf"}
             </div>
             <div className="an-info-sep" />
             <div className="an-info-item">
-              <Cpu size={11} />
+              <Cpu size={12} />
               AI_MODEL_v2
             </div>
             <div className="an-info-sep" />
             <div className="an-info-item">
-              <ScanLine size={11} />
+              <ScanLine size={12} />
               {new Date().toLocaleTimeString()}
             </div>
             <div style={{ marginLeft: "auto" }}>
               <span
                 className="an-info-badge"
-                style={{ background: "rgba(16,185,129,.1)", color: "#6ee7b7", border: "1px solid rgba(16,185,129,.2)" }}
+                style={{ background: "rgba(16,185,129,0.1)", color: "var(--emerald)", border: "1px solid rgba(16,185,129,0.15)" }}
               >
-                <CheckCircle2 size={9} /> SUCCESS
+                <CheckCircle2 size={10} /> SUCCESS
               </span>
             </div>
           </div>
