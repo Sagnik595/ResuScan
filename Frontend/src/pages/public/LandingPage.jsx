@@ -1221,6 +1221,405 @@ const LandingPage = () => {
         </div>
       </section>
 
+      {/* ── PRICING ── */}
+      <section id="pricing" style={{ padding: "7rem 2rem" }}>
+        <Reveal>
+          <p
+            style={{
+              textAlign: "center",
+              fontSize: "0.72rem",
+              fontWeight: 600,
+              letterSpacing: "0.1em",
+              textTransform: "uppercase",
+              color: "var(--rs-accent)",
+              marginBottom: "0.75rem",
+            }}
+          >
+            Pricing
+          </p>
+          <h2
+            style={{
+              fontFamily: "'Outfit', sans-serif",
+              fontSize: "clamp(2rem, 4vw, 2.8rem)",
+              fontWeight: 700,
+              textAlign: "center",
+              letterSpacing: "-0.03em",
+              lineHeight: 1.1,
+              marginBottom: "0.75rem",
+            }}
+          >
+            Simple, transparent pricing
+          </h2>
+          <p
+            style={{
+              textAlign: "center",
+              color: "var(--rs-muted)",
+              fontSize: "1.05rem",
+              fontWeight: 300,
+              maxWidth: 440,
+              margin: "0 auto 4rem",
+            }}
+          >
+            Start free, upgrade when you're ready to go all in.
+          </p>
+        </Reveal>
+
+        <div
+          style={{
+            display: "grid",
+            gridTemplateColumns: "repeat(auto-fit, minmax(270px, 1fr))",
+            gap: "1.25rem",
+            maxWidth: 860,
+            margin: "0 auto",
+          }}
+        >
+          {/* Free */}
+          <Reveal delay={0}>
+            <div className="rs-feature-card" style={{ padding: "2.25rem" }}>
+              <p
+                style={{
+                  fontSize: "0.78rem",
+                  fontWeight: 600,
+                  letterSpacing: "0.08em",
+                  textTransform: "uppercase",
+                  color: "var(--rs-muted)",
+                  marginBottom: "0.5rem",
+                }}
+              >
+                Free
+              </p>
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "baseline",
+                  gap: "0.25rem",
+                  marginBottom: "0.5rem",
+                }}
+              >
+                <span
+                  style={{
+                    fontSize: "2.8rem",
+                    fontWeight: 700,
+                    letterSpacing: "-0.04em",
+                  }}
+                >
+                  $0
+                </span>
+                <span style={{ fontSize: "0.85rem", color: "var(--rs-muted)" }}>
+                  /month
+                </span>
+              </div>
+              <p
+                style={{
+                  fontSize: "0.85rem",
+                  color: "var(--rs-muted)",
+                  marginBottom: "2rem",
+                  lineHeight: 1.6,
+                }}
+              >
+                Perfect for dipping your toes in and testing the water.
+              </p>
+              <div
+                style={{
+                  display: "flex",
+                  flexDirection: "column",
+                  gap: "0.75rem",
+                  marginBottom: "2rem",
+                }}
+              >
+                {[
+                  "3 resume analyses/month",
+                  "Match score & breakdown",
+                  "Top 5 missing skills",
+                  "ATS compatibility check",
+                ].map((item) => (
+                  <div
+                    key={item}
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      gap: "0.65rem",
+                    }}
+                  >
+                    <CheckCircle size={14} color="var(--rs-accent3)" />
+                    <span
+                      style={{ fontSize: "0.88rem", color: "var(--rs-muted)" }}
+                    >
+                      {item}
+                    </span>
+                  </div>
+                ))}
+              </div>
+              <Link to="/register">
+                <button
+                  className="rs-btn-ghost"
+                  style={{ width: "100%", justifyContent: "center" }}
+                >
+                  Get started free
+                </button>
+              </Link>
+            </div>
+          </Reveal>
+
+          {/* Pro — featured */}
+          <Reveal delay={0.1}>
+            <div
+              style={{
+                background: "var(--rs-surface)",
+                border: "1px solid rgba(99,102,241,0.45)",
+                borderRadius: 20,
+                padding: "2.25rem",
+                position: "relative",
+                overflow: "hidden",
+                boxShadow: "0 0 40px rgba(99,102,241,0.12)",
+                transition: "transform 0.3s, box-shadow 0.3s",
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.transform = "translateY(-6px)";
+                e.currentTarget.style.boxShadow =
+                  "0 24px 60px rgba(0,0,0,0.35), 0 0 40px rgba(99,102,241,0.2)";
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.transform = "translateY(0)";
+                e.currentTarget.style.boxShadow =
+                  "0 0 40px rgba(99,102,241,0.12)";
+              }}
+            >
+              {/* Top shimmer */}
+              <div
+                style={{
+                  position: "absolute",
+                  top: 0,
+                  left: 0,
+                  right: 0,
+                  height: 1,
+                  background:
+                    "linear-gradient(90deg, transparent, var(--rs-accent), var(--rs-accent2), transparent)",
+                }}
+              />
+              {/* Most popular badge */}
+              <div
+                style={{
+                  position: "absolute",
+                  top: "1.25rem",
+                  right: "1.25rem",
+                  background: "rgba(99,102,241,0.15)",
+                  border: "1px solid rgba(99,102,241,0.3)",
+                  color: "var(--rs-accent)",
+                  fontSize: "0.68rem",
+                  fontWeight: 700,
+                  letterSpacing: "0.07em",
+                  textTransform: "uppercase",
+                  padding: "0.28rem 0.75rem",
+                  borderRadius: 100,
+                }}
+              >
+                Most popular
+              </div>
+              <p
+                style={{
+                  fontSize: "0.78rem",
+                  fontWeight: 600,
+                  letterSpacing: "0.08em",
+                  textTransform: "uppercase",
+                  color: "var(--rs-accent)",
+                  marginBottom: "0.5rem",
+                }}
+              >
+                Pro
+              </p>
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "baseline",
+                  gap: "0.25rem",
+                  marginBottom: "0.5rem",
+                }}
+              >
+                <span
+                  style={{
+                    fontSize: "2.8rem",
+                    fontWeight: 700,
+                    letterSpacing: "-0.04em",
+                  }}
+                >
+                  $12
+                </span>
+                <span style={{ fontSize: "0.85rem", color: "var(--rs-muted)" }}>
+                  /month
+                </span>
+              </div>
+              <p
+                style={{
+                  fontSize: "0.85rem",
+                  color: "var(--rs-muted)",
+                  marginBottom: "2rem",
+                  lineHeight: 1.6,
+                }}
+              >
+                For serious job seekers who want every edge possible.
+              </p>
+              <div
+                style={{
+                  display: "flex",
+                  flexDirection: "column",
+                  gap: "0.75rem",
+                  marginBottom: "2rem",
+                }}
+              >
+                {[
+                  "Unlimited resume analyses",
+                  "Full skill gap breakdown",
+                  "AI-powered reword suggestions",
+                  "Project ideas generator",
+                  "Keyword density optimizer",
+                  "Priority support",
+                ].map((item) => (
+                  <div
+                    key={item}
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      gap: "0.65rem",
+                    }}
+                  >
+                    <CheckCircle size={14} color="var(--rs-accent3)" />
+                    <span
+                      style={{ fontSize: "0.88rem", color: "var(--rs-muted)" }}
+                    >
+                      {item}
+                    </span>
+                  </div>
+                ))}
+              </div>
+              <Link to="/register">
+                <button
+                  className="rs-btn-primary"
+                  style={{ width: "100%", justifyContent: "center" }}
+                >
+                  Start Pro free trial <ArrowRight size={15} />
+                </button>
+              </Link>
+            </div>
+          </Reveal>
+
+          {/* Teams */}
+          <Reveal delay={0.2}>
+            <div className="rs-feature-card" style={{ padding: "2.25rem" }}>
+              <p
+                style={{
+                  fontSize: "0.78rem",
+                  fontWeight: 600,
+                  letterSpacing: "0.08em",
+                  textTransform: "uppercase",
+                  color: "var(--rs-muted)",
+                  marginBottom: "0.5rem",
+                }}
+              >
+                Teams
+              </p>
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "baseline",
+                  gap: "0.25rem",
+                  marginBottom: "0.5rem",
+                }}
+              >
+                <span
+                  style={{
+                    fontSize: "2.8rem",
+                    fontWeight: 700,
+                    letterSpacing: "-0.04em",
+                  }}
+                >
+                  $29
+                </span>
+                <span style={{ fontSize: "0.85rem", color: "var(--rs-muted)" }}>
+                  /month
+                </span>
+              </div>
+              <p
+                style={{
+                  fontSize: "0.85rem",
+                  color: "var(--rs-muted)",
+                  marginBottom: "2rem",
+                  lineHeight: 1.6,
+                }}
+              >
+                Ideal for career coaches and recruiting teams.
+              </p>
+              <div
+                style={{
+                  display: "flex",
+                  flexDirection: "column",
+                  gap: "0.75rem",
+                  marginBottom: "2rem",
+                }}
+              >
+                {[
+                  "Everything in Pro",
+                  "Up to 10 team members",
+                  "Shared candidate dashboard",
+                  "Bulk resume analysis",
+                  "Custom branding",
+                  "Dedicated account manager",
+                ].map((item) => (
+                  <div
+                    key={item}
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      gap: "0.65rem",
+                    }}
+                  >
+                    <CheckCircle size={14} color="var(--rs-accent3)" />
+                    <span
+                      style={{ fontSize: "0.88rem", color: "var(--rs-muted)" }}
+                    >
+                      {item}
+                    </span>
+                  </div>
+                ))}
+              </div>
+              <Link to="/register">
+                <button
+                  className="rs-btn-ghost"
+                  style={{ width: "100%", justifyContent: "center" }}
+                >
+                  Contact sales
+                </button>
+              </Link>
+            </div>
+          </Reveal>
+        </div>
+
+        {/* Footnote */}
+        <Reveal delay={0.25}>
+          <p
+            style={{
+              textAlign: "center",
+              color: "var(--rs-muted)",
+              fontSize: "0.82rem",
+              marginTop: "2.5rem",
+              fontWeight: 300,
+            }}
+          >
+            All paid plans include a 7-day free trial. No credit card required
+            to start.
+          </p>
+        </Reveal>
+      </section>
+
+      <div
+        style={{
+          height: 1,
+          background:
+            "linear-gradient(90deg, transparent, var(--rs-border), transparent)",
+          margin: "0 4rem",
+        }}
+      />
+
       {/* ── CTA ── */}
       <section style={{ padding: "4rem 2rem 7rem" }}>
         <Reveal>
