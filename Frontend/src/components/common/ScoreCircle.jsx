@@ -5,8 +5,7 @@ const ScoreCircle = ({ score = 0 }) => {
   const stroke = 10;
   const normalizedRadius = radius - stroke / 2;
   const circumference = normalizedRadius * 2 * Math.PI;
-  const strokeDashoffset =
-    circumference - (score / 100) * circumference;
+  const strokeDashoffset = circumference - (score / 100) * circumference;
 
   const getColor = () => {
     if (score >= 80) return "#10B981";
@@ -40,10 +39,12 @@ const ScoreCircle = ({ score = 0 }) => {
       </svg>
 
       <div className="absolute text-center">
-        <p className="text-3xl font-bold text-slate-900">
+        <p className="text-3xl font-bold" style={{ color: "#ffffff" }}>
           {Math.round(score)}%
         </p>
-        <p className="text-sm text-slate-500">Match</p>
+        <p className="text-sm" style={{ color: "#7b82a8" }}>
+          Match
+        </p>
       </div>
     </div>
   );
