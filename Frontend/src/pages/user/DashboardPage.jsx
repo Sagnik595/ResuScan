@@ -509,6 +509,13 @@ const DashboardPage = () => {
         if (jobsRes.data.success) {
           setUserData((prev) => ({ ...prev, totalJobs: jobsRes.data.data?.length || 0 }));
         }
+
+        const userAnalysis = await api.get("/report/getAllAna");
+        console.log(userAnalysis.data.numberOfAnalysis);
+        
+        if (userAnalysis.data.success) {
+          setUserData((prev) => ({ ...prev, totalAnalyses: userAnalysis.data.numberOfAnalysis || 0 }));
+        }
       } catch {
         toast.error("Failed to load dashboard data");
       } finally {

@@ -11,6 +11,11 @@ const analyzeSchema = new mongoose.Schema({
         ref: "jd",
         required: true,
     },
+    userId:{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User",
+        required: true,
+    },
     jobDesc:{
         type:String,
         required:true
