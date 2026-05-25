@@ -140,4 +140,6 @@ const deleteJD = async(req,res)=>{
   }
 }
 
+// the next API or work is to complete a chatbot feature
+
 export {uploadJD, parseJD, getAllJD, getSingleJD, deleteJD};
