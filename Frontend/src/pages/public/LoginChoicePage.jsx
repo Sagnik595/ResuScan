@@ -15,7 +15,7 @@
 //         <div className="container-custom w-full">
 //           <div className="mb-12 text-center">
 //             <h1 className="text-4xl font-bold text-slate-900">
-//               Welcome to ResuScan
+//               Welcome to Hirelytics
 //             </h1>
 //             <p className="mt-3 text-lg text-slate-600">
 //               Choose how you'd like to access your account
@@ -35,7 +35,7 @@
 //                 </h2>
 
 //                 <p className="mt-2 text-slate-600">
-//                   Sign in to your ResuScan account to upload your resume,
+//                   Sign in to your Hirelytics account to upload your resume,
 //                   compare it with job descriptions, and get AI-powered
 //                   recommendations.
 //                 </p>
@@ -128,11 +128,16 @@
 
 // export default LoginChoicePage;
 
-
-
 import React, { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
-import { Users, Shield, ArrowRight, Sparkles, Lock, ChevronRight } from "lucide-react";
+import {
+  Users,
+  Shield,
+  ArrowRight,
+  Sparkles,
+  Lock,
+  ChevronRight,
+} from "lucide-react";
 
 /* ─── Orbital Ring Background ─────────────────────────────────────────── */
 const OrbitalCanvas = () => {
@@ -286,7 +291,9 @@ const ChoiceCard = ({
           cursor: "pointer",
           height: "100%",
           boxSizing: "border-box",
-          transform: hovered ? "translateY(-8px) scale(1.01)" : "translateY(0) scale(1)",
+          transform: hovered
+            ? "translateY(-8px) scale(1.01)"
+            : "translateY(0) scale(1)",
           boxShadow: hovered
             ? `0 32px 80px rgba(0,0,0,0.45), 0 0 0 1px ${accentColor}, 0 0 60px ${glowColor}`
             : "0 8px 32px rgba(0,0,0,0.25)",
@@ -376,7 +383,9 @@ const ChoiceCard = ({
             justifyContent: "center",
             marginBottom: "1.5rem",
             color: iconColor,
-            transform: hovered ? "scale(1.08) rotate(-3deg)" : "scale(1) rotate(0deg)",
+            transform: hovered
+              ? "scale(1.08) rotate(-3deg)"
+              : "scale(1) rotate(0deg)",
             transition: "transform 0.35s cubic-bezier(0.16,1,0.3,1)",
             position: "relative",
             zIndex: 1,
@@ -602,9 +611,13 @@ const LoginChoicePage = () => {
       {/* ── Navbar ── */}
       <nav className="lc-nav">
         <a href="/" className="lc-logo">
-          <img src="/Logo3.png" alt="ResuScan Logo" style={{ height: 30, width: "auto" }} />
+          <img
+            src="/Logo3.png"
+            alt="Hirelytics Logo"
+            style={{ height: 30, width: "auto" }}
+          />
           <span className="lc-logo-text">
-            Resu<span className="lc-logo-scan">Scan</span>
+            Hire<span className="lc-logo-scan">lytics</span>
           </span>
         </a>
         <Link to="/register" className="lc-register-btn">
@@ -658,7 +671,8 @@ const LoginChoicePage = () => {
             letterSpacing: "0.08em",
             textTransform: "uppercase",
             marginBottom: "2rem",
-            animation: "lc-fade-up 0.7s 0.1s ease both, lc-badge-glow 3s 1s ease infinite",
+            animation:
+              "lc-fade-up 0.7s 0.1s ease both, lc-badge-glow 3s 1s ease infinite",
           }}
         >
           <span
@@ -697,7 +711,7 @@ const LoginChoicePage = () => {
               animation: "lc-gradient-shift 5s linear infinite",
             }}
           >
-            ResuScan
+            Hirelytics
           </span>
         </h1>
 
@@ -875,17 +889,39 @@ const LoginChoicePage = () => {
           fontSize: "0.8rem",
         }}
       >
-        <span style={{ fontFamily: "'Outfit', sans-serif", fontWeight: 700, fontSize: "1.1rem", letterSpacing: "-0.02em" }}>
-          <span style={{ background: "linear-gradient(135deg, var(--lc-accent), var(--lc-accent2))", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>Resu</span>
-          <span style={{ WebkitTextFillColor: "var(--lc-accent3)" }}>Scan</span>
+        <span
+          style={{
+            fontFamily: "'Outfit', sans-serif",
+            fontWeight: 700,
+            fontSize: "1.1rem",
+            letterSpacing: "-0.02em",
+          }}
+        >
+          <span
+            style={{
+              background:
+                "linear-gradient(135deg, var(--lc-accent), var(--lc-accent2))",
+              WebkitBackgroundClip: "text",
+              WebkitTextFillColor: "transparent",
+            }}
+          >
+            Hire
+          </span>
+          <span style={{ WebkitTextFillColor: "var(--lc-accent3)" }}>
+            lytics
+          </span>
         </span>
-        <span>© 2025 ResuScan. All rights reserved.</span>
+        <span>© 2025 Hirelytics. All rights reserved.</span>
         <div style={{ display: "flex", gap: "1.5rem" }}>
           {["Privacy", "Terms", "Contact"].map((l) => (
             <a
               key={l}
               href="#"
-              style={{ color: "var(--lc-muted)", textDecoration: "none", transition: "color 0.2s" }}
+              style={{
+                color: "var(--lc-muted)",
+                textDecoration: "none",
+                transition: "color 0.2s",
+              }}
               onMouseEnter={(e) => (e.target.style.color = "var(--lc-text)")}
               onMouseLeave={(e) => (e.target.style.color = "var(--lc-muted)")}
             >

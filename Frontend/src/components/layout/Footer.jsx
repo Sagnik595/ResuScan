@@ -10,11 +10,11 @@ const Footer = () => {
             <div className="rounded-lg bg-indigo-600 p-2 text-white">
               <FileText className="h-4 w-4" />
             </div>
-            <span className="font-semibold text-slate-900">ResuScan</span>
+            <span className="font-semibold text-slate-900">Hirelytics</span>
           </div>
 
           <p className="text-sm text-slate-500">
-            © {new Date().getFullYear()} ResuScan. All rights reserved.
+            © {new Date().getFullYear()} Hirelytics. All rights reserved.
           </p>
         </div>
       </div>

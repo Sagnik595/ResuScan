@@ -22,11 +22,11 @@ const Navbar = () => {
   return (
     <header className="sticky top-0 z-50 border-b border-slate-200 bg-white/80 backdrop-blur-md">
       <div className="container-custom flex h-16 items-center justify-between">
-        <Link to="/" className="flex items-center gap-2">
+        <Link to="/" className="flex items-center gap-1">
           <div className="rounded-xl bg-indigo-600 p-2 text-white">
             <FileText className="h-5 w-5" />
           </div>
-          <span className="text-xl font-bold text-slate-900">ResuScan</span>
+          <span className="text-xl font-bold text-slate-900">Hirelytics</span>
         </Link>
 
         <nav className="hidden items-center gap-8 md:flex">

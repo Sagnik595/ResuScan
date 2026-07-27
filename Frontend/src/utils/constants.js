@@ -1,4 +1,4 @@
-export const APP_NAME = "ResuScan";
+export const APP_NAME = "Hirelytics";
 
 export const USER_ROUTES = {
   DASHBOARD: "/dashboard",

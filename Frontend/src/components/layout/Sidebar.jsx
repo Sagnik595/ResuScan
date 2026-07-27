@@ -360,16 +360,16 @@ const Sidebar = ({ admin = false }) => {
   const { logout } = useAuth();
 
   const userLinks = [
-    { name: "Dashboard",     path: "/dashboard", icon: LayoutDashboard },
-    { name: "Upload Resume", path: "/upload",    icon: Upload },
-    { name: "Jobs",          path: "/jobs",       icon: Briefcase },
+    { name: "Dashboard", path: "/dashboard", icon: LayoutDashboard },
+    { name: "Upload Resume", path: "/upload", icon: Upload },
+    { name: "Jobs", path: "/jobs", icon: Briefcase },
   ];
 
   const adminLinks = [
-    { name: "Dashboard",   path: "/admin/dashboard", icon: LayoutDashboard },
-    { name: "Add Job",     path: "/admin/add-job",   icon: Upload },
-    { name: "Manage Jobs", path: "/admin/jobs",      icon: FileSearch },
-    { name: "Users",       path: "/admin/users",     icon: Users },
+    { name: "Dashboard", path: "/admin/dashboard", icon: LayoutDashboard },
+    { name: "Add Job", path: "/admin/add-job", icon: Upload },
+    { name: "Manage Jobs", path: "/admin/jobs", icon: FileSearch },
+    { name: "Users", path: "/admin/users", icon: Users },
   ];
 
   const links = admin ? adminLinks : userLinks;
@@ -384,7 +384,7 @@ const Sidebar = ({ admin = false }) => {
             <Zap size={18} color="white" strokeWidth={2.5} />
           </div>
           <span className="sb-logo-text">
-            Resu<span>Scan</span>
+            Hire<span>lytics</span>
           </span>
           <span className="sb-logo-badge">{admin ? "Admin" : "User"}</span>
         </div>
@@ -423,12 +423,19 @@ const Sidebar = ({ admin = false }) => {
         {/* ── Footer ── */}
         <div className="sb-footer">
           <div className="sb-user-strip">
-            <div className="sb-user-avatar">
-              {admin ? "A" : "U"}
-            </div>
-            <div onClick={()=>{navigate('/profile')}} className="cursor-pointer sb-user-info">
-              <div className="sb-user-name">{admin ? "Admin User" : "My Account"}</div>
-              <div className="sb-user-role">{admin ? "Administrator" : "Job Seeker"}</div>
+            <div className="sb-user-avatar">{admin ? "A" : "U"}</div>
+            <div
+              onClick={() => {
+                navigate("/profile");
+              }}
+              className="cursor-pointer sb-user-info"
+            >
+              <div className="sb-user-name">
+                {admin ? "Admin User" : "My Account"}
+              </div>
+              <div className="sb-user-role">
+                {admin ? "Administrator" : "Job Seeker"}
+              </div>
             </div>
             <span className="sb-status-dot" />
           </div>

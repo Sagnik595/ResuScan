@@ -523,7 +523,7 @@ const RegisterPage = () => {
           <div className="reg-panel-orb2" />
           <div className="reg-panel-content">
             <div className="reg-panel-eyebrow">
-              <span /> ResuScan - AI Powered Resume Analyzer
+              <span /> Hirelytics - AI Powered Resume Analyzer
             </div>
             <h2 className="reg-panel-headline">
               Your career,<br /><em>elevated</em> by AI.

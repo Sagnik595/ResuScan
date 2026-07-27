@@ -29,7 +29,7 @@
 
 //   const validateForm = () => {
 //     const { email, password } = formData;
-    
+
 //     // Email validation
 //     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 //     if (!email.trim()) {
@@ -40,7 +40,7 @@
 //       toast.error("Please enter a valid email");
 //       return false;
 //     }
-    
+
 //     // Password validation
 //     if (!password.trim()) {
 //       toast.error("Password is required");
@@ -50,7 +50,7 @@
 //       toast.error("Password must be at least 8 characters");
 //       return false;
 //     }
-    
+
 //     return true;
 //   };
 
@@ -97,7 +97,7 @@
 //             </h1>
 
 //             <p className="mt-2 text-slate-600">
-//               Sign in to your ResuScan account.
+//               Sign in to your Hirelytics account.
 //             </p>
 
 //             <form onSubmit={handleSubmit} className="mt-8 space-y-5">
@@ -149,7 +149,6 @@
 
 // export default LoginPage;
 
-
 import React, { useEffect, useRef, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
@@ -174,7 +173,11 @@ const ParticleCanvas = () => {
     resize();
     window.addEventListener("resize", resize);
 
-    const COLORS = [[99, 102, 241], [139, 92, 246], [16, 185, 129]];
+    const COLORS = [
+      [99, 102, 241],
+      [139, 92, 246],
+      [16, 185, 129],
+    ];
     const particles = Array.from({ length: 35 }, () => ({
       x: Math.random() * canvas.width,
       y: Math.random() * canvas.height,
@@ -238,7 +241,15 @@ const ParticleCanvas = () => {
 };
 
 /* ─── Styled Input Field ──────────────────────────────────────────────── */
-const StyledInput = ({ label, type, name, value, onChange, icon: Icon, required }) => {
+const StyledInput = ({
+  label,
+  type,
+  name,
+  value,
+  onChange,
+  icon: Icon,
+  required,
+}) => {
   const [focused, setFocused] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const isPassword = type === "password";
@@ -286,7 +297,9 @@ const StyledInput = ({ label, type, name, value, onChange, icon: Icon, required 
           style={{
             width: "100%",
             boxSizing: "border-box",
-            background: focused ? "rgba(99,102,241,0.06)" : "rgba(255,255,255,0.03)",
+            background: focused
+              ? "rgba(99,102,241,0.06)"
+              : "rgba(255,255,255,0.03)",
             border: `1px solid ${focused ? "rgba(99,102,241,0.5)" : "var(--lp-border)"}`,
             borderRadius: 12,
             padding: "0.85rem 1rem 0.85rem 2.75rem",
@@ -295,7 +308,8 @@ const StyledInput = ({ label, type, name, value, onChange, icon: Icon, required 
             fontSize: "0.9rem",
             fontWeight: 400,
             outline: "none",
-            transition: "border-color 0.25s ease, background 0.25s ease, box-shadow 0.25s ease",
+            transition:
+              "border-color 0.25s ease, background 0.25s ease, box-shadow 0.25s ease",
             boxShadow: focused ? "0 0 0 3px rgba(99,102,241,0.12)" : "none",
             paddingRight: isPassword ? "3rem" : "1rem",
           }}
@@ -321,8 +335,12 @@ const StyledInput = ({ label, type, name, value, onChange, icon: Icon, required 
               alignItems: "center",
               transition: "color 0.2s",
             }}
-            onMouseEnter={(e) => (e.currentTarget.style.color = "var(--lp-text)")}
-            onMouseLeave={(e) => (e.currentTarget.style.color = "var(--lp-muted)")}
+            onMouseEnter={(e) =>
+              (e.currentTarget.style.color = "var(--lp-text)")
+            }
+            onMouseLeave={(e) =>
+              (e.currentTarget.style.color = "var(--lp-muted)")
+            }
           >
             {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
           </button>
@@ -420,10 +438,22 @@ const LoginPage = () => {
   const validateForm = () => {
     const { email, password } = formData;
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!email.trim()) { toast.error("Email is required"); return false; }
-    if (!emailRegex.test(email)) { toast.error("Please enter a valid email"); return false; }
-    if (!password.trim()) { toast.error("Password is required"); return false; }
-    if (password.length < 8) { toast.error("Password must be at least 8 characters"); return false; }
+    if (!email.trim()) {
+      toast.error("Email is required");
+      return false;
+    }
+    if (!emailRegex.test(email)) {
+      toast.error("Please enter a valid email");
+      return false;
+    }
+    if (!password.trim()) {
+      toast.error("Password is required");
+      return false;
+    }
+    if (password.length < 8) {
+      toast.error("Password must be at least 8 characters");
+      return false;
+    }
     return true;
   };
 
@@ -466,15 +496,23 @@ const LoginPage = () => {
       {/* ── Navbar ── */}
       <nav className="lp-nav">
         <a href="/" className="lp-logo">
-          <img src="/Logo3.png" alt="ResuScan Logo" style={{ height: 30, width: "auto" }} />
+          <img
+            src="/Logo3.png"
+            alt="Hirelytics Logo"
+            style={{ height: 30, width: "auto" }}
+          />
           <span
             style={{
-              background: "linear-gradient(135deg, var(--lp-accent), var(--lp-accent2))",
+              background:
+                "linear-gradient(135deg, var(--lp-accent), var(--lp-accent2))",
               WebkitBackgroundClip: "text",
               WebkitTextFillColor: "transparent",
             }}
           >
-            Resu<span style={{ WebkitTextFillColor: "var(--lp-accent3)" }}>Scan</span>
+            Hire
+            <span style={{ WebkitTextFillColor: "var(--lp-accent3)" }}>
+              lytics
+            </span>
           </span>
         </a>
         <Link
@@ -525,7 +563,8 @@ const LoginPage = () => {
             width: 500,
             height: 500,
             borderRadius: "50%",
-            background: "radial-gradient(circle, rgba(99,102,241,0.07) 0%, transparent 70%)",
+            background:
+              "radial-gradient(circle, rgba(99,102,241,0.07) 0%, transparent 70%)",
             top: "50%",
             left: "50%",
             transform: "translate(-50%,-50%)",
@@ -612,7 +651,8 @@ const LoginPage = () => {
               padding: "2.5rem",
               position: "relative",
               overflow: "hidden",
-              boxShadow: "0 40px 80px rgba(0,0,0,0.4), 0 0 0 1px var(--lp-border)",
+              boxShadow:
+                "0 40px 80px rgba(0,0,0,0.4), 0 0 0 1px var(--lp-border)",
               animation: "lp-fade-up 0.6s 0.35s ease both",
             }}
           >
@@ -638,12 +678,20 @@ const LoginPage = () => {
                 width: 150,
                 height: 150,
                 borderRadius: "50%",
-                background: "radial-gradient(circle, rgba(99,102,241,0.07) 0%, transparent 70%)",
+                background:
+                  "radial-gradient(circle, rgba(99,102,241,0.07) 0%, transparent 70%)",
                 pointerEvents: "none",
               }}
             />
 
-            <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column", gap: "1.25rem" }}>
+            <form
+              onSubmit={handleSubmit}
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                gap: "1.25rem",
+              }}
+            >
               <StyledInput
                 label="Email Address"
                 type="email"
@@ -664,7 +712,13 @@ const LoginPage = () => {
                   icon={Lock}
                   required
                 />
-                <div style={{ display: "flex", justifyContent: "flex-end", marginTop: "0.5rem" }}>
+                <div
+                  style={{
+                    display: "flex",
+                    justifyContent: "flex-end",
+                    marginTop: "0.5rem",
+                  }}
+                >
                   <a
                     href="#"
                     style={{
@@ -674,8 +728,12 @@ const LoginPage = () => {
                       fontWeight: 500,
                       transition: "color 0.2s",
                     }}
-                    onMouseEnter={(e) => (e.target.style.color = "var(--lp-accent)")}
-                    onMouseLeave={(e) => (e.target.style.color = "var(--lp-muted)")}
+                    onMouseEnter={(e) =>
+                      (e.target.style.color = "var(--lp-accent)")
+                    }
+                    onMouseLeave={(e) =>
+                      (e.target.style.color = "var(--lp-muted)")
+                    }
                   >
                     Forgot password?
                   </a>
@@ -705,11 +763,16 @@ const LoginPage = () => {
                   fontSize: "0.95rem",
                   fontWeight: 600,
                   cursor: loading ? "not-allowed" : "pointer",
-                  boxShadow: btnHovered && !loading
-                    ? "0 0 40px rgba(99,102,241,0.5)"
-                    : "0 0 20px rgba(99,102,241,0.25)",
-                  transform: btnHovered && !loading ? "translateY(-2px)" : "translateY(0)",
-                  transition: "transform 0.25s ease, box-shadow 0.25s ease, background 0.25s ease",
+                  boxShadow:
+                    btnHovered && !loading
+                      ? "0 0 40px rgba(99,102,241,0.5)"
+                      : "0 0 20px rgba(99,102,241,0.25)",
+                  transform:
+                    btnHovered && !loading
+                      ? "translateY(-2px)"
+                      : "translateY(0)",
+                  transition:
+                    "transform 0.25s ease, box-shadow 0.25s ease, background 0.25s ease",
                   marginTop: "0.25rem",
                 }}
               >
@@ -733,7 +796,9 @@ const LoginPage = () => {
                     <ArrowRight
                       size={16}
                       style={{
-                        transform: btnHovered ? "translateX(3px)" : "translateX(0)",
+                        transform: btnHovered
+                          ? "translateX(3px)"
+                          : "translateX(0)",
                         transition: "transform 0.25s ease",
                       }}
                     />
@@ -751,11 +816,21 @@ const LoginPage = () => {
                 margin: "1.75rem 0",
               }}
             >
-              <div style={{ flex: 1, height: 1, background: "var(--lp-border)" }} />
-              <span style={{ fontSize: "0.75rem", color: "var(--lp-muted)", fontWeight: 400 }}>
+              <div
+                style={{ flex: 1, height: 1, background: "var(--lp-border)" }}
+              />
+              <span
+                style={{
+                  fontSize: "0.75rem",
+                  color: "var(--lp-muted)",
+                  fontWeight: 400,
+                }}
+              >
                 or
               </span>
-              <div style={{ flex: 1, height: 1, background: "var(--lp-border)" }} />
+              <div
+                style={{ flex: 1, height: 1, background: "var(--lp-border)" }}
+              />
             </div>
 
             {/* Register link */}
@@ -777,8 +852,12 @@ const LoginPage = () => {
                   paddingBottom: 1,
                   transition: "border-color 0.2s",
                 }}
-                onMouseEnter={(e) => (e.target.style.borderColor = "var(--lp-accent)")}
-                onMouseLeave={(e) => (e.target.style.borderColor = "rgba(99,102,241,0.4)")}
+                onMouseEnter={(e) =>
+                  (e.target.style.borderColor = "var(--lp-accent)")
+                }
+                onMouseLeave={(e) =>
+                  (e.target.style.borderColor = "rgba(99,102,241,0.4)")
+                }
               >
                 Register for free
               </Link>
@@ -804,8 +883,12 @@ const LoginPage = () => {
                 gap: "0.3rem",
                 transition: "color 0.2s",
               }}
-              onMouseEnter={(e) => (e.currentTarget.style.color = "var(--lp-text)")}
-              onMouseLeave={(e) => (e.currentTarget.style.color = "var(--lp-muted)")}
+              onMouseEnter={(e) =>
+                (e.currentTarget.style.color = "var(--lp-text)")
+              }
+              onMouseLeave={(e) =>
+                (e.currentTarget.style.color = "var(--lp-muted)")
+              }
             >
               ← Back to portal selection
             </Link>
@@ -822,21 +905,23 @@ const LoginPage = () => {
               animation: "lp-fade-up 0.6s 0.6s ease both",
             }}
           >
-            {["256-bit encrypted", "No data sold", "SOC 2 compliant"].map((label) => (
-              <div
-                key={label}
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  gap: "0.35rem",
-                  fontSize: "0.73rem",
-                  color: "var(--lp-muted)",
-                }}
-              >
-                <Sparkles size={11} style={{ color: "var(--lp-accent3)" }} />
-                {label}
-              </div>
-            ))}
+            {["256-bit encrypted", "No data sold", "SOC 2 compliant"].map(
+              (label) => (
+                <div
+                  key={label}
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: "0.35rem",
+                    fontSize: "0.73rem",
+                    color: "var(--lp-muted)",
+                  }}
+                >
+                  <Sparkles size={11} style={{ color: "var(--lp-accent3)" }} />
+                  {label}
+                </div>
+              ),
+            )}
           </div>
         </div>
       </main>
@@ -857,17 +942,39 @@ const LoginPage = () => {
           color: "var(--lp-muted)",
         }}
       >
-        <span style={{ fontFamily: "'Outfit', sans-serif", fontWeight: 700, fontSize: "1.1rem", letterSpacing: "-0.02em" }}>
-          <span style={{ background: "linear-gradient(135deg, var(--lp-accent), var(--lp-accent2))", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>Resu</span>
-          <span style={{ WebkitTextFillColor: "var(--lp-accent3)" }}>Scan</span>
+        <span
+          style={{
+            fontFamily: "'Outfit', sans-serif",
+            fontWeight: 700,
+            fontSize: "1.1rem",
+            letterSpacing: "-0.02em",
+          }}
+        >
+          <span
+            style={{
+              background:
+                "linear-gradient(135deg, var(--lp-accent), var(--lp-accent2))",
+              WebkitBackgroundClip: "text",
+              WebkitTextFillColor: "transparent",
+            }}
+          >
+            Hire
+          </span>
+          <span style={{ WebkitTextFillColor: "var(--lp-accent3)" }}>
+            lytics
+          </span>
         </span>
-        <span>© 2025 ResuScan. All rights reserved.</span>
+        <span>© 2025 Hirelytics. All rights reserved.</span>
         <div style={{ display: "flex", gap: "1.5rem" }}>
           {["Privacy", "Terms", "Contact"].map((l) => (
             <a
               key={l}
               href="#"
-              style={{ color: "var(--lp-muted)", textDecoration: "none", transition: "color 0.2s" }}
+              style={{
+                color: "var(--lp-muted)",
+                textDecoration: "none",
+                transition: "color 0.2s",
+              }}
               onMouseEnter={(e) => (e.target.style.color = "var(--lp-text)")}
               onMouseLeave={(e) => (e.target.style.color = "var(--lp-muted)")}
             >

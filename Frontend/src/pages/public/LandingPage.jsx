@@ -456,7 +456,7 @@ const LandingPage = () => {
         >
           <img
             src="/Logo3.png"
-            alt="ResuScan Logo"
+            alt="Hirelytics Logo"
             style={{ height: "32px", width: "auto" }}
           />
           <span
@@ -467,9 +467,9 @@ const LandingPage = () => {
               WebkitTextFillColor: "transparent",
             }}
           >
-            Resu
+            Hire
             <span style={{ WebkitTextFillColor: "var(--rs-accent3)" }}>
-              Scan
+              lytics
             </span>
           </span>
         </a>
@@ -1102,7 +1102,7 @@ const LandingPage = () => {
                 marginBottom: "0.75rem",
               }}
             >
-              Why ResuScan
+              Why Hirelytics
             </p>
             <h2
               style={{
@@ -1126,7 +1126,7 @@ const LandingPage = () => {
                 marginBottom: "2rem",
               }}
             >
-              Most candidates spray and pray. ResuScan gives you the precision
+              Most candidates spray and pray. Hirelytics gives you the precision
               to tailor every application — knowing exactly what's missing
               before you hit send.
             </p>
@@ -1173,7 +1173,7 @@ const LandingPage = () => {
                   fill="var(--rs-accent)"
                 />
                 <span style={{ fontWeight: 600, fontSize: "0.95rem" }}>
-                  Why choose ResuScan
+                  Why choose Hirelytics
                 </span>
               </div>
               <div
@@ -1677,7 +1677,7 @@ const LandingPage = () => {
               }}
             >
               Join over 12,000 job seekers who've sharpened their resumes with
-              ResuScan. It's free to start.
+              Hirelytics. It's free to start.
             </p>
             <div
               style={{
@@ -1724,9 +1724,9 @@ const LandingPage = () => {
             letterSpacing: "-0.02em",
           }}
         >
-          Resu<span style={{ color: "var(--rs-accent3)" }}>Scan</span>
+          Hire<span style={{ color: "var(--rs-accent3)" }}>lytics</span>
         </span>
-        <span>© 2025 ResuScan. All rights reserved.</span>
+        <span>© 2025 Hirelytics. All rights reserved.</span>
         <div style={{ display: "flex", gap: "1.5rem" }}>
           {["Privacy", "Terms", "Contact"].map((l) => (
             <a
