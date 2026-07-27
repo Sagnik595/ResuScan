@@ -4,20 +4,19 @@
 // getSingleJD
 // deleteJD
 
-
 // to build
 // update JD
-
 
 import mongoose from "mongoose";
 import { jd } from "../models/JDModel.js";
 import { extractSkills } from "../utils/extractSkills.js";
+import Groq from "groq-sdk";
 
 // API to upload job description
 const uploadJD = async (req, res) => {
   try {
     const { jdData, cName, jTitle, location, salary, deadline } = req.body;
-    
+
     // Validate all required fields
     if (!jdData || !cName || !jTitle || !deadline) {
       return res.status(400).json({
@@ -42,11 +41,19 @@ const uploadJD = async (req, res) => {
       salary: salary || "Not disclosed",
       deadline,
     });
-    
-    return res.status(201).json({ success: true, message: "Job created successfully", data: data._id });
+
+    return res
+      .status(201)
+      .json({
+        success: true,
+        message: "Job created successfully",
+        data: data._id,
+      });
   } catch (error) {
     console.log(error);
-    return res.status(500).json({ success: false, message: "Failed to upload job description" });
+    return res
+      .status(500)
+      .json({ success: false, message: "Failed to upload job description" });
   }
 };
 
@@ -59,10 +66,9 @@ const parseJD = async (req, res) => {
         success: false,
         message: "Please enter a valid JD ID!!",
       });
-    
+
     const JDdata = await jd.findById(id);
-    if(!JDdata)
-      return res.json({success:false,message:"No job found!!"});
+    if (!JDdata) return res.json({ success: false, message: "No job found!!" });
 
     let text = JDdata.desc;
     text = text
@@ -83,8 +89,8 @@ const parseJD = async (req, res) => {
     let jdData = extractSkills(text);
 
     JDdata.skills = jdData;
-    
-    await JDdata.save(); 
+
+    await JDdata.save();
     return res.json({ success: true, required: jdData });
   } catch (error) {
     console.log(error);
@@ -93,53 +99,54 @@ const parseJD = async (req, res) => {
 };
 
 //API to get all the job details
-const getAllJD = async(req,res)=>{
+const getAllJD = async (req, res) => {
   try {
-    const jdData = await jd.find().select("-companyLogo -desc -updatedAt -createdAt -__v");;
-    if(!jdData)
-      return res.json({success:false,message:"No JD available!!"});
+    const jdData = await jd
+      .find()
+      .select("-companyLogo -desc -updatedAt -createdAt -__v");
+    if (!jdData)
+      return res.json({ success: false, message: "No JD available!!" });
     const filterData = jdData;
-    return res.json({success:true,data:filterData});
+    return res.json({ success: true, data: filterData });
   } catch (error) {
     console.log(error);
     return res.json({ success: false, message: error.message });
   }
-}
-
+};
 
 //API to get single JOB details
-const getSingleJD = async(req,res)=>{
+const getSingleJD = async (req, res) => {
   try {
-    const {id} = req.params;
-    if(!id)
-      return res.json({success:false,message:"No ID provided!!"});
+    const { id } = req.params;
+    if (!id) return res.json({ success: false, message: "No ID provided!!" });
     const data = await jd.findById(id);
-    if(!data)
-      return res.json({success:false,message:"No such job found!!"});
-    return res.json({success:true,data});
+    if (!data)
+      return res.json({ success: false, message: "No such job found!!" });
+    return res.json({ success: true, data });
   } catch (error) {
     console.log(error);
     return res.json({ success: false, message: error.message });
   }
-}
-
+};
 
 //API to delete JD
-const deleteJD = async(req,res)=>{
+const deleteJD = async (req, res) => {
   try {
-    const {id} = req.body;
-    if(!id)
-      return res.json({success:false,message:"No ID provided!!"});
+    const { id } = req.body;
+    if (!id) return res.json({ success: false, message: "No ID provided!!" });
     const data = await jd.findByIdAndDelete(id);
-    if(!data)
-      return res.json({success:false,message:"No such job found!!"});
-    return res.json({success:true,message:"Job Detail Deleted successfully!!"});
+    if (!data)
+      return res.json({ success: false, message: "No such job found!!" });
+    return res.json({
+      success: true,
+      message: "Job Detail Deleted successfully!!",
+    });
   } catch (error) {
     console.log(error);
     return res.json({ success: false, message: error.message });
   }
-}
+};
 
 // the next API or work is to complete a chatbot feature
 
-export {uploadJD, parseJD, getAllJD, getSingleJD, deleteJD};
+export { uploadJD, parseJD, getAllJD, getSingleJD, deleteJD };
