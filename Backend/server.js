@@ -46,7 +46,7 @@ app.use(express.urlencoded({ extended: true, limit: "50mb" }));
 // CORS with restrictions
 app.use(
   cors({
-    origin: "https://hirelytics-nu.vercel.app/",
+    origin: "*" ,
     credentials: true,
   }),
 );
